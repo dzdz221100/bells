@@ -423,9 +423,9 @@ DIAGRAM = """
     every write returns a proposal, not a result</text>
   <path d="M630,66 L630,242" class="lnT" marker-end="url(#arT)"/>
 
-  <path d="M500,286 L452,286 L452,272 L444,272" class="lnT" marker-end="url(#arT)"/>
-  <text x="474" y="303" class="lblT" text-anchor="middle">only after</text>
-  <text x="474" y="314" class="lblT" text-anchor="middle">a human says yes</text>
+  <path d="M500,286 L468,286 L468,272 L444,272" class="lnT" marker-end="url(#arT)"/>
+  <text x="494" y="303" class="lblT" text-anchor="end">only after</text>
+  <text x="494" y="314" class="lblT" text-anchor="end">a human says yes</text>
 
   <path d="M630,326 L630,402 L150,402 L150,384" class="lnL"
         marker-end="url(#arL)"/>

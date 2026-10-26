@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bells — MGT 409 — Dariga Zhuman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<style>
+:root{
+  --ink:#1b2a33; --azure:#2f6f8f; --lemon:#e8b833; --terra:#c5614a; --chalk:#faf7f0;
+  --rule:#d9d2c4; --muted:#5a6b74;
+  --serif:'Bodoni Moda',"Bodoni 72",Didot,"Hoefler Text",Garamond,"Times New Roman",serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:'Space Mono',"SFMono-Regular",Menlo,Consolas,monospace;
+}
+.reveal-viewport,body{background:var(--chalk)}
+.reveal{font-family:var(--sans);color:var(--ink);font-size:30px}
+.reveal .slides{text-align:left}
+.reveal section{padding:0 2%}
+.bleed{padding:0!important}
+/* the four-beat loop on the demo slide: big, but it has to fit */
+.steps{display:flex;align-items:baseline;gap:.25em;margin-bottom:.45em}
+.steps>div{flex:1}
+.steps .w{font-family:var(--serif);font-size:1.9em;line-height:1;
+  letter-spacing:-.02em;display:block}
+.steps .arrow{flex:0 0 auto;font-size:1.1em}
+
+.reveal h1,.reveal h2,.reveal h3{
+  font-family:var(--serif);font-weight:600;color:var(--ink);
+  text-transform:none;letter-spacing:-.015em;margin:0 0 .25em;line-height:1.04}
+.reveal h1{font-size:3.05em}
+.reveal h2{font-size:1.45em}
+.reveal h3{font-size:1em}
+.reveal p{margin:.35em 0;line-height:1.45}
+.reveal strong{font-weight:700}
+.reveal a{color:var(--azure)}
+.reveal ul{margin:.4em 0 0 .9em;line-height:1.5}
+.reveal li{margin:.28em 0}
+.reveal li::marker{color:var(--terra)}
+
+.eyebrow{font-family:var(--mono);font-size:.42em;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--azure);display:block;margin-bottom:.7em}
+.kicker{font-family:var(--serif);font-style:italic;color:var(--muted);
+  font-size:.82em;margin-top:.1em}
+.src{font-family:var(--mono);font-size:.3em;letter-spacing:.06em;color:var(--muted);
+  position:absolute;bottom:-.6em;left:2%}
+
+/* the number is the slide */
+.big{font-family:var(--serif);font-weight:600;line-height:.92;
+  font-size:3.6em;letter-spacing:-.03em;display:block}
+.big.sm{font-size:2.5em}
+.big .unit{font-size:.4em;letter-spacing:0}
+.azure{color:var(--azure)} .terra{color:var(--terra)} .lemon{color:#b08a1e}
+.cap{font-family:var(--mono);font-size:.38em;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-top:.5em}
+
+.row{display:flex;gap:1.1em;align-items:flex-start}
+.row>*{flex:1}
+.row.tight{gap:.7em}
+.figs{display:flex;gap:.8em;align-items:stretch}
+.figs>figure{flex:1;margin:0}
+
+.card{background:#fff;border:1px solid var(--rule);border-top:5px solid var(--azure);
+  padding:.55em .65em}
+.card.lemon{border-top-color:var(--lemon)} .card.terra{border-top-color:var(--terra)}
+
+.repo{font-family:var(--mono);font-size:.95em;letter-spacing:.01em;color:var(--ink);
+  background:#fff;border:2px solid var(--azure);padding:.45em .6em;
+  display:inline-block;margin-top:.5em;word-break:break-all}
+
+.arrow{font-family:var(--serif);font-size:1.6em;color:var(--terra);
+  padding:0 .15em;line-height:1}
+
+figure{margin:0}
+figure img{width:100%;display:block;border:1px solid var(--rule);background:#fff;
+  max-height:52vh;object-fit:contain}
+figcaption{font-family:var(--mono);font-size:.34em;letter-spacing:.06em;
+  color:var(--muted);margin-top:.45em;line-height:1.4}
+.ph{border:2px dashed var(--azure);background:#fff;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;min-height:30vh;
+  padding:1em}
+.ph b{font-family:var(--mono);font-size:.34em;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--azure)}
+.ph i{font-family:var(--serif);font-size:.62em;margin:.35em 0}
+.ph code{font-family:var(--mono);font-size:.3em;color:var(--muted)}
+
+.diagram-wrap{width:100%}
+.diagram-wrap svg{width:100%;height:auto;max-height:82vh;display:block}
+
+table{width:100%;border-collapse:collapse;font-size:.58em}
+th,td{text-align:left;padding:.42em .5em;border-bottom:1px solid var(--rule);
+  vertical-align:top}
+thead th{font-family:var(--mono);font-size:.62em;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--azure);border-bottom:2px solid var(--ink)}
+tbody tr:nth-child(even){background:rgba(47,111,143,.05)}
+.ok{color:#2b6b43;font-weight:700}
+
+.reveal .progress{color:var(--terra)}
+.reveal .controls{color:var(--azure)}
+
+/* If reveal.js never loads, show the slides as a plain readable page rather
+   than a stack of overlapping sections. */
+.no-reveal .slides{display:block;max-width:60rem;margin:0 auto;padding:2rem}
+.no-reveal .slides>section{display:block!important;position:static!important;
+  border-bottom:3px double var(--ink);padding:2.5rem 0;opacity:1!important;
+  transform:none!important;height:auto!important}
+.no-reveal .big{font-size:2.4em}
+.no-reveal figure img{max-height:none}
+.no-reveal .src{position:static;display:block;margin-top:1rem}
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section>
+  <span class="eyebrow">MGT 409 · AI Foundations for Managers</span>
+  <h1>Bells</h1>
+  <p class="kicker">A concierge for destination wedding guests.</p>
+  <p style="margin-top:.9em;font-size:.72em">Dariga Zhuman</p>
+  <div class="repo">https://github.com/dzdz221100/bells</div>
+</section>
+<section>
+  <span class="eyebrow">The problem</span>
+  <h2>One couple answers the&nbsp;same question forty times.</h2>
+  <div class="row" style="margin-top:.7em">
+    <div><span class="big azure">40</span><span class="cap">guests flying in</span></div>
+    <div><span class="big azure">5</span><span class="cap">languages</span></div>
+    <div><span class="big terra">1</span><span class="cap">couple, on WhatsApp</span></div>
+  </div>
+  <p class="kicker" style="margin-top:.9em">Nine months of it. By the thirtieth
+  message, Elena is guessing at a shuttle time she hasn't checked.</p>
+</section>
+<section>
+  <span class="eyebrow">What is actually new</span>
+  <h2>They publish information.<br>Bells answers questions.</h2>
+  <table style="margin-top:.5em">
+    <thead><tr><th>Product</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>Zola · The&nbsp;Knot</td><td>Registry, website, RSVP. Travel is a page the couple type.</td></tr>
+      <tr><td>WithJoy</td><td>Has an AI assistant — it helps the <em>couple</em> write content.</td></tr>
+      <tr><td>Appy&nbsp;Couple · Minted</td><td>Beautiful static itineraries. A guest reads; they don't ask.</td></tr>
+    </tbody>
+  </table>
+  <ul style="margin-top:.55em;font-size:.72em">
+    <li><strong>Solves</strong> arrival logistics instead of listing them</li>
+    <li>Answers each guest <strong>in the language they wrote in</strong></li>
+    <li><strong>Escalates instead of guessing</strong> — then never asks twice</li>
+  </ul>
+  <p class="kicker" style="font-size:.52em;margin-top:.5em">All five are more
+  complete products than mine. The claim is narrow, not that Bells is better.</p>
+</section>
+<section class="bleed">
+  <span class="eyebrow">How it works</span>
+  <div class="diagram-wrap">
+<svg class="diagram" viewBox="0 0 780 452" role="img"
+     aria-label="The concierge delegates to knowledge, logistics and registry;
+     unanswerable questions escalate to the couple, who answer once in the host
+     console, and the answer becomes a permanent fact.">
+  <defs>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="8" refY="3"
+            orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#2f6f8f"/></marker>
+    <marker id="arT" markerWidth="9" markerHeight="9" refX="8" refY="3"
+            orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#c5614a"/></marker>
+    <marker id="arL" markerWidth="9" markerHeight="9" refX="8" refY="3"
+            orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#b08a1e"/></marker>
+  </defs>
+  <style>
+    .bx{fill:#fff;stroke:#1b2a33;stroke-width:1.4}
+    .bxa{fill:#fff;stroke:#2f6f8f;stroke-width:1.8}
+    .bxt{fill:#fff;stroke:#c5614a;stroke-width:1.8}
+    .ttl{font-family:Georgia,serif;font-size:14px;fill:#1b2a33;font-weight:700}
+    .sub{font-family:monospace;font-size:9.5px;fill:#5a6b74}
+    .lbl{font-family:monospace;font-size:9px;fill:#2f6f8f;letter-spacing:.06em}
+    .lblT{font-family:monospace;font-size:9px;fill:#c5614a;letter-spacing:.06em}
+    .lblL{font-family:monospace;font-size:9px;fill:#8a6a13;letter-spacing:.06em}
+    .ln{stroke:#2f6f8f;stroke-width:1.5;fill:none}
+    .lnT{stroke:#c5614a;stroke-width:1.5;fill:none}
+    .lnL{stroke:#b08a1e;stroke-width:1.5;fill:none;stroke-dasharray:5 3}
+  </style>
+
+  <rect x="20" y="14" width="140" height="44" rx="4" class="bx"/>
+  <text x="90" y="34" class="ttl" text-anchor="middle">Guest</text>
+  <text x="90" y="48" class="sub" text-anchor="middle">any language</text>
+
+  <rect x="240" y="8" width="200" height="56" rx="4" class="bxa"/>
+  <text x="340" y="30" class="ttl" text-anchor="middle">Concierge</text>
+  <text x="340" y="45" class="sub" text-anchor="middle">routes · no data tools</text>
+  <text x="340" y="57" class="sub" text-anchor="middle">UsageLimits: 8 requests</text>
+
+  <line x1="162" y1="36" x2="236" y2="36" class="ln" marker-end="url(#ar)"/>
+
+  <rect x="20" y="142" width="200" height="62" rx="4" class="bx"/>
+  <text x="120" y="163" class="ttl" text-anchor="middle">Knowledge</text>
+  <text x="120" y="178" class="sub" text-anchor="middle">search_facts</text>
+  <text x="120" y="193" class="sub" text-anchor="middle">is_public = 1 only</text>
+
+  <rect x="240" y="142" width="200" height="62" rx="4" class="bx"/>
+  <text x="340" y="163" class="ttl" text-anchor="middle">Logistics</text>
+  <text x="340" y="178" class="sub" text-anchor="middle">get_pickup · list_runs</text>
+  <text x="340" y="193" class="sub" text-anchor="middle">get_hotels · search_facts</text>
+
+  <rect x="460" y="142" width="200" height="62" rx="4" class="bx"/>
+  <text x="560" y="163" class="ttl" text-anchor="middle">Registry</text>
+  <text x="560" y="178" class="sub" text-anchor="middle">list_items · claim</text>
+  <text x="560" y="193" class="sub" text-anchor="middle">never names a claimer</text>
+
+  <path d="M300,66 L300,104 L120,104 L120,138" class="ln" marker-end="url(#ar)"/>
+  <path d="M340,66 L340,138" class="ln" marker-end="url(#ar)"/>
+  <path d="M380,66 L380,104 L560,104 L560,138" class="ln" marker-end="url(#ar)"/>
+  <text x="340" y="99" class="lbl" text-anchor="middle">delegates, in English</text>
+
+  <rect x="20" y="246" width="420" height="40" rx="4" class="bx"/>
+  <text x="230" y="265" class="ttl" text-anchor="middle">SQLite</text>
+  <text x="230" y="279" class="sub" text-anchor="middle">wedding_facts · guests · shuttle_runs · registry</text>
+  <path d="M120,206 L120,242" class="ln" marker-end="url(#ar)"/>
+  <path d="M340,206 L340,242" class="ln" marker-end="url(#ar)"/>
+  <path d="M560,206 L560,226 L420,226 L420,242" class="ln" marker-end="url(#ar)"/>
+
+  <rect x="500" y="8" width="260" height="56" rx="4" class="bxt"/>
+  <text x="630" y="30" class="ttl" text-anchor="middle">The couple</text>
+  <text x="630" y="45" class="sub" text-anchor="middle">host console · passcode</text>
+  <text x="630" y="57" class="sub" text-anchor="middle">answer once, never twice</text>
+  <path d="M442,28 L496,28" class="lnT" marker-end="url(#arT)"/>
+  <text x="469" y="20" class="lblT" text-anchor="middle">escalate</text>
+
+  <rect x="500" y="246" width="260" height="78" rx="4" class="bxt"/>
+  <text x="630" y="267" class="ttl" text-anchor="middle">Host agent</text>
+  <text x="630" y="282" class="sub" text-anchor="middle">add_fact · update_fact</text>
+  <text x="630" y="295" class="sub" text-anchor="middle">resolve_escalation · draft_blast</text>
+  <text x="630" y="313" class="sub" text-anchor="middle" style="fill:#c5614a">
+    every write returns a proposal, not a result</text>
+  <path d="M630,66 L630,242" class="lnT" marker-end="url(#arT)"/>
+
+  <path d="M500,286 L468,286 L468,272 L444,272" class="lnT" marker-end="url(#arT)"/>
+  <text x="494" y="303" class="lblT" text-anchor="end">only after</text>
+  <text x="494" y="314" class="lblT" text-anchor="end">a human says yes</text>
+
+  <path d="M630,326 L630,402 L150,402 L150,384" class="lnL"
+        marker-end="url(#arL)"/>
+  <rect x="20" y="348" width="260" height="34" rx="4" class="bx"
+        style="stroke:#b08a1e"/>
+  <text x="150" y="370" class="ttl" text-anchor="middle"
+        style="font-size:12.5px">answered unaided next time</text>
+  <text x="430" y="424" class="lblL" text-anchor="middle">
+    the approved answer becomes a permanent public fact</text>
+</svg>
+</div>
+</section>
+<section>
+  <span class="eyebrow">Demo · the guest</span>
+  <h3>Everything you owe, and when you land.</h3>
+  <div class="figs" style="margin-top:.5em">
+    <figure><div class="ph"><b>Figure 1</b><i>the guest page at the top, hero and all</i><code>screenshots/01-guest-page.png</code></div><figcaption>The guest page — what this guest still owes, computed from their own row.</figcaption></figure>
+    <figure><div class="ph"><b>Figure 3</b><i>the shuttle timeline on the guest page</i><code>screenshots/03-shuttle-timeline.png</code></div><figcaption>The arrival timeline — land, passport and bags, pickup, arrive.</figcaption></figure>
+  </div>
+</section>
+<section>
+  <span class="eyebrow">Demo · the loop that is the point</span>
+  <div class="steps">
+    <div><span class="w terra">asks</span>
+      <span class="cap">guest · no fact exists</span></div>
+    <div class="arrow">→</div>
+    <div><span class="w terra">escalates</span>
+      <span class="cap">Bells does not guess</span></div>
+    <div class="arrow">→</div>
+    <div><span class="w azure">approves</span>
+      <span class="cap">the couple, once</span></div>
+    <div class="arrow">→</div>
+    <div><span class="w lemon">answers</span>
+      <span class="cap">itself, forever</span></div>
+  </div>
+  <div class="row tight">
+    <div class="card"><span class="big sm">3
+      <span class="unit">→</span> 6</span>
+      <span class="cap">facts from the console</span></div>
+    <div class="card lemon"><span class="big sm">3/3</span>
+      <span class="cap">answered unaided next time</span></div>
+    <div style="flex:1.6"><figure><div class="ph"><b>Figure 7</b><i>the host console at /host, whole page</i><code>screenshots/07-host-console.png</code></div><figcaption>The host console: inbox, impact, spend.</figcaption></figure></div>
+  </div>
+  <span class="src">output/escalation_loop.json</span>
+</section>
+<section>
+  <span class="eyebrow">Cost</span>
+  <span class="big azure">$0.00032</span>
+  <span class="cap">per question answered · 219 real turns</span>
+  <div class="row" style="margin-top:.8em">
+    <div class="card lemon"><span class="big sm">74.0<span class="unit">%</span></span>
+      <span class="cap">input served from cache</span></div>
+    <div class="card"><span class="big sm">−51.5<span class="unit">%</span></span>
+      <span class="cap">cost, cached vs busted</span></div>
+    <div class="card"><span class="big sm">8/8</span>
+      <span class="cap">facts returned · both passes</span></div>
+  </div>
+  <p class="kicker" style="margin-top:.6em;font-size:.62em">Caching cut cost by
+  half and latency by 87.4% without losing a single
+  required fact.</p>
+  <span class="src">output/audit_trail.json · output/cost_results.json</span>
+</section>
+<section>
+  <span class="eyebrow">Safety</span>
+  <div class="row">
+    <div style="flex:.85">
+      <span class="big azure">12<span class="unit">/12</span></span>
+      <span class="cap">hostile probes passed</span>
+      <ul style="font-size:.6em;margin-top:.7em">
+        <li>6/6 privacy · 3/3 injection</li>
+        <li>2/2 content filter · 1/1 runaway</li>
+        <li>7/7 data-layer · 3/3 handler</li>
+      </ul>
+      <p class="kicker" style="font-size:.52em;margin-top:.5em">Private rows are
+      filtered in SQL. The agent cannot leak what it was never given.</p>
+    </div>
+    <div style="flex:1.15"><figure><div class="ph"><b>Figure 5</b><i>the chat refusing a question about another guest</i><code>screenshots/05-privacy-refusal.png</code></div><figcaption>Asked for the couple&#x27;s private number. Refused — the row never entered the model&#x27;s context.</figcaption></figure></div>
+  </div>
+  <span class="src">output/safety_results.json</span>
+</section>
+<section>
+  <span class="eyebrow">Impact</span>
+  <div class="row" style="align-items:flex-start">
+    <div><span class="big terra">40<span class="unit"> → </span>15</span>
+      <span class="cap">airport transfers · −62.5%</span></div>
+    <div><span class="big lemon">€3,500</span>
+      <span class="cap">saved · 83.3 driver hours</span></div>
+    <div><span class="big azure">84.9<span class="unit">%</span></span>
+      <span class="cap">of 219 questions, no couple</span></div>
+  </div>
+  <p class="kicker" style="margin-top:.8em;font-size:.62em">The trade I chose:
+  +16.1 minutes of waiting per person, against
+  a cap of 90 that I set.</p>
+  <span class="src">output/solver_results.json · output/audit_trail.json</span>
+</section>
+<section>
+  <span class="eyebrow">What's next</span>
+  <h2>Three things, in order.</h2>
+  <div class="row" style="margin-top:.7em">
+    <div class="card"><span class="big sm azure">1</span>
+      <span class="cap">Seating solver</span>
+      <p style="font-size:.56em;margin-top:.4em">Written, not wired in. Same
+      pattern as the shuttles: Python solves, the agent explains.</p></div>
+    <div class="card lemon"><span class="big sm lemon">2</span>
+      <span class="cap">Real sending</span>
+      <p style="font-size:.56em;margin-top:.4em">Drafts exist in five languages.
+      Nothing sends — on purpose. A provider behind the same approval step.</p></div>
+    <div class="card terra"><span class="big sm terra">3</span>
+      <span class="cap">A pilot wedding</span>
+      <p style="font-size:.56em;margin-top:.4em">Every number here is from one
+      seeded wedding and my own testing. No real guest has used it yet.</p></div>
+  </div>
+</section>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+(function(){
+  function boot(){
+    if (window.Reveal) {
+      Reveal.initialize({
+        hash:false, controls:true, progress:true, slideNumber:'c/t',
+        transition:'fade', transitionSpeed:'fast',
+        width:1280, height:760, margin:0.07,
+        minScale:0.2, maxScale:1.6
+      });
+    } else {
+      // CDN unreachable — degrade to one scrollable page.
+      document.body.classList.add('no-reveal');
+    }
+  }
+  if (document.readyState === 'complete') boot();
+  else window.addEventListener('load', boot);
+})();
+</script>
+</body>
+</html>

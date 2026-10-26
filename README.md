@@ -154,18 +154,23 @@ describing it.
 | `audit_trail.json` | every model turn and every confirmed host write, with tokens and cost. |
 | `screenshots/` | screenshots of the running app, added by hand (see below). |
 | `report.html` | the written report — one self-contained file, every figure read from the files above at build time. |
+| `slides.html` | the ten-slide deck, built from the same figures. Arrows to move, `F` for fullscreen, `Esc` for overview. |
 
-### Rebuilding the report
+### Rebuilding the report and the deck
 
 ```bash
 backend/.venv/bin/python output/build_report.py
+backend/.venv/bin/python output/build_slides.py
 ```
 
-It reads the JSON artifacts, recomputes the spend totals with the same
-arithmetic `/api/host/spend` uses, embeds every screenshot as a base64 data URI
-and writes `output/report.html`. The result opens by double-click on any
-machine, offline, with every image showing — nothing loads from the network
-except the web fonts, and it reads correctly if those fail.
+Both read the JSON artifacts, recompute the spend totals with the same
+arithmetic `/api/host/spend` uses, and embed every screenshot as a base64 data
+URI — so the report and the deck can never disagree with each other or with the
+running app. `report.html` opens by double-click on any machine, offline, with
+every image showing; the only network requests are the three web fonts, and the
+type falls back cleanly if those fail. `slides.html` additionally pulls
+reveal.js from a CDN, and lays itself out as one readable page if that CDN is
+unreachable.
 
 Screenshots are matched to their place in the report by numeric prefix. Drop
 these into `output/screenshots/` and rebuild; a slot with no file prints a
