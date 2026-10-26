@@ -1,0 +1,181 @@
+{
+  "run_at": "2026-10-25T23:59:39",
+  "model": "gpt-6-luna",
+  "what_this_shows": "a question with no recorded answer is escalated rather than guessed; the couple answer it once in the host console; it becomes a public wedding fact; and the agent answers it unaided from then on",
+  "before": {
+    "facts_from_host_console": 0,
+    "facts_total": 35,
+    "inbox": {
+      "open": 9,
+      "answered": 1,
+      "dismissed": 0
+    },
+    "turns_recorded": 143,
+    "escalation_rate": 0.1678
+  },
+  "after": {
+    "facts_from_host_console": 3,
+    "facts_total": 38,
+    "inbox": {
+      "open": 9,
+      "answered": 4,
+      "dismissed": 0
+    },
+    "turns_recorded": 146,
+    "escalation_rate": 0.1849
+  },
+  "summary": {
+    "questions_asked": 3,
+    "escalated_on_first_ask": 3,
+    "approved_in_the_host_console": 3,
+    "facts_from_host_console_moved_by": 3,
+    "answered_unaided_on_second_ask": 2,
+    "loop_closed": true,
+    "all_answered_unaided": false,
+    "still_escalating_after_approval": [
+      {
+        "id": "luggage",
+        "fact_exists": 36,
+        "specialists_consulted": [
+          "concierge.ask_logistics",
+          "concierge.escalate_to_host"
+        ],
+        "why": "the concierge routed this to the wrong specialist, so the fact the couple wrote was never searched for"
+      }
+    ]
+  },
+  "first_ask": [
+    {
+      "id": "luggage",
+      "question": "We check out on the Sunday morning but our flight is at night — is there anywhere to leave our bags for the day?",
+      "answer": "I’ve passed this question on to the couple and will get back to you when I have an answer.",
+      "escalated": true,
+      "tools_called": [
+        "concierge.ask_logistics",
+        "concierge.escalate_to_host"
+      ],
+      "cost_usd": 0.000187,
+      "elapsed_ms": 2688.2
+    },
+    {
+      "id": "ev_charging",
+      "question": "We're hiring an electric car — is there anywhere to charge it near the venue?",
+      "answer": "I don’t have confirmed information about EV charging near the venue, so I’ve asked the couple and will get back to you when I have an answer.",
+      "escalated": true,
+      "tools_called": [
+        "concierge.ask_knowledge",
+        "knowledge.search_facts",
+        "knowledge.search_facts",
+        "concierge.escalate_to_host"
+      ],
+      "cost_usd": 0.000298,
+      "elapsed_ms": 2875.6
+    },
+    {
+      "id": "quiet_room",
+      "question": "Our baby will need somewhere quiet to nap during the dinner. Is there a room we could use?",
+      "answer": "I’ve passed this question to the couple and will get back to you when I have an answer.",
+      "escalated": true,
+      "tools_called": [
+        "concierge.ask_knowledge",
+        "knowledge.search_facts",
+        "knowledge.search_facts",
+        "concierge.escalate_to_host"
+      ],
+      "cost_usd": 0.000284,
+      "elapsed_ms": 3160.0
+    }
+  ],
+  "host_approvals": [
+    {
+      "id": "luggage",
+      "escalation_id": 11,
+      "filed_question": "We check out on Sunday morning but our flight is at night. Is there somewhere to leave our bags for the day?",
+      "approved": true,
+      "fact_id": 36,
+      "topic": "luggage_storage",
+      "host_answer": "Yes — all three hotels will hold luggage free of charge on checkout day until 20:00. Leave it with reception on your way out and show your room key to collect it.",
+      "why": "Bells will answer this itself from now on."
+    },
+    {
+      "id": "ev_charging",
+      "escalation_id": 12,
+      "filed_question": "We're hiring an electric car — is there anywhere to charge it near the venue?",
+      "approved": true,
+      "fact_id": 37,
+      "topic": "ev_charging",
+      "host_answer": "There are two public charging points in Ravello, both on the car park at Via della Repubblica. The venue itself has no charger, so plan to charge before you drive up.",
+      "why": "Bells will answer this itself from now on."
+    },
+    {
+      "id": "quiet_room",
+      "escalation_id": 13,
+      "filed_question": "Can Camille and their family use a quiet room for their baby to nap during dinner?",
+      "approved": true,
+      "fact_id": 38,
+      "topic": "quiet_room",
+      "host_answer": "Yes — the small library off the main hall is set aside as a quiet room all evening. It has a sofa and a dimmer, and the sitters can keep an ear on it.",
+      "why": "Bells will answer this itself from now on."
+    }
+  ],
+  "second_ask": [
+    {
+      "id": "luggage",
+      "question": "We check out on the Sunday morning but our flight is at night — is there anywhere to leave our bags for the day?",
+      "answer": "I don’t have that information yet, but I’ve passed your question to the couple and will get back to you when I hear from them.",
+      "escalated": true,
+      "facts_carried_through": [],
+      "facts_expected": [
+        "20:00",
+        "reception"
+      ],
+      "answered_from_the_couples_answer": false,
+      "tools_called": [
+        "concierge.ask_logistics",
+        "concierge.escalate_to_host"
+      ],
+      "cost_usd": 0.000191,
+      "elapsed_ms": 1515.9
+    },
+    {
+      "id": "ev_charging",
+      "question": "We're hiring an electric car — is there anywhere to charge it near the venue?",
+      "answer": "There’s no charger at the venue, but there are two public charging points in Ravello, both in the car park at Via della Repubblica. Plan to charge before driving up.",
+      "escalated": false,
+      "facts_carried_through": [
+        "via della repubblica",
+        "car park"
+      ],
+      "facts_expected": [
+        "via della repubblica",
+        "car park"
+      ],
+      "answered_from_the_couples_answer": true,
+      "tools_called": [
+        "concierge.ask_knowledge",
+        "knowledge.search_facts"
+      ],
+      "cost_usd": 0.000179,
+      "elapsed_ms": 1568.9
+    },
+    {
+      "id": "quiet_room",
+      "question": "Our baby will need somewhere quiet to nap during the dinner. Is there a room we could use?",
+      "answer": "Yes—the small library off the main hall is set aside as a quiet room for the evening. It has a sofa and dimmer, and the sitters can keep an ear on it.",
+      "escalated": false,
+      "facts_carried_through": [
+        "library"
+      ],
+      "facts_expected": [
+        "library"
+      ],
+      "answered_from_the_couples_answer": true,
+      "tools_called": [
+        "concierge.ask_knowledge",
+        "knowledge.search_facts"
+      ],
+      "cost_usd": 0.000178,
+      "elapsed_ms": 3864.0
+    }
+  ]
+}

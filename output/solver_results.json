@@ -1,0 +1,731 @@
+{
+  "generated_at": "2026-10-25T22:30:41",
+  "scenario": {
+    "guests": 40,
+    "seats": 75,
+    "days": [
+      "2027-06-10",
+      "2027-06-11"
+    ],
+    "rng_seed": 409,
+    "capacity": 14,
+    "buffer_minutes": 30,
+    "max_wait_minutes": 90
+  },
+  "assumptions": {
+    "cost_per_transfer_eur": 140.0,
+    "minutes_per_round_trip": 200,
+    "note": "Baseline assumes each booking takes its own transfer, leaving 30 min after that guest lands."
+  },
+  "solved_in_ms": 5.13,
+  "constraints_passed": [
+    "every guest is on a run (none unassigned)",
+    "all 40 guests assigned exactly once",
+    "no run departs sooner than 30 min after a passenger lands",
+    "no guest waits more than 90 min",
+    "no run exceeds 14 seats",
+    "every run leaves as early as the buffer allows (wait is minimal for its group)",
+    "run count 15 respects the capacity lower bound of 6",
+    "run count 15 beats the naive baseline of 40",
+    "schedule persisted: shuttle_runs, seats_taken and guests.shuttle_run_id all agree"
+  ],
+  "optimality_benchmark": {
+    "trials": 200,
+    "matched_brute_force_optimum": 199,
+    "match_rate_pct": 99.5,
+    "run_count_misses": 1,
+    "note": "Tight small instances (capacity 3–6). Grouping under a capacity limit is bin-packing, which is NP-hard, so the solver is exact over contiguous groupings plus a repair pass — not provably optimal in general."
+  },
+  "before": {
+    "label": "naive: one shuttle per booking",
+    "runs": 40,
+    "seats_moved": 75,
+    "total_wait_person_minutes": 2250,
+    "max_wait_minutes": 30,
+    "mean_wait_minutes": 30.0,
+    "mean_seats_per_run": 1.88,
+    "driver_hours": 133.3,
+    "transfer_cost_eur": 5600.0
+  },
+  "after": {
+    "label": "solved: clustered runs",
+    "runs": 15,
+    "seats_moved": 75,
+    "total_wait_person_minutes": 3455,
+    "max_wait_minutes": 85,
+    "mean_wait_minutes": 45.8,
+    "mean_seats_per_run": 5.0,
+    "driver_hours": 50.0,
+    "transfer_cost_eur": 2100.0
+  },
+  "impact": {
+    "runs_saved": 25,
+    "runs_saved_pct": 62.5,
+    "driver_hours_saved": 83.3,
+    "transfer_cost_saved_eur": 3500.0,
+    "extra_wait_person_minutes": 1205,
+    "extra_wait_per_person_minutes": 16.1,
+    "worst_wait_minutes": 85,
+    "wait_limit_minutes": 90
+  },
+  "runs": [
+    {
+      "id": 1,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T07:35",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 2,
+      "guest_ids": [
+        12
+      ],
+      "first_landing": "2027-06-10T07:05",
+      "last_landing": "2027-06-10T07:05",
+      "max_wait_minutes": 30
+    },
+    {
+      "id": 2,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T10:25",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 1,
+      "guest_ids": [
+        31
+      ],
+      "first_landing": "2027-06-10T09:55",
+      "last_landing": "2027-06-10T09:55",
+      "max_wait_minutes": 30
+    },
+    {
+      "id": 3,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T12:00",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 10,
+      "guest_ids": [
+        6,
+        9,
+        13
+      ],
+      "first_landing": "2027-06-10T11:15",
+      "last_landing": "2027-06-10T11:30",
+      "max_wait_minutes": 45
+    },
+    {
+      "id": 4,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T13:35",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 6,
+      "guest_ids": [
+        21,
+        5,
+        28
+      ],
+      "first_landing": "2027-06-10T12:10",
+      "last_landing": "2027-06-10T13:05",
+      "max_wait_minutes": 85
+    },
+    {
+      "id": 5,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T14:50",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 4,
+      "guest_ids": [
+        18,
+        33
+      ],
+      "first_landing": "2027-06-10T13:50",
+      "last_landing": "2027-06-10T14:20",
+      "max_wait_minutes": 60
+    },
+    {
+      "id": 6,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T16:25",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 5,
+      "guest_ids": [
+        27,
+        39,
+        38,
+        2
+      ],
+      "first_landing": "2027-06-10T15:15",
+      "last_landing": "2027-06-10T15:55",
+      "max_wait_minutes": 70
+    },
+    {
+      "id": 7,
+      "direction": "arrival",
+      "depart_at": "2027-06-10T21:10",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 5,
+      "guest_ids": [
+        35,
+        36
+      ],
+      "first_landing": "2027-06-10T19:55",
+      "last_landing": "2027-06-10T20:40",
+      "max_wait_minutes": 75
+    },
+    {
+      "id": 8,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T08:10",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 4,
+      "guest_ids": [
+        4,
+        17
+      ],
+      "first_landing": "2027-06-11T07:40",
+      "last_landing": "2027-06-11T07:40",
+      "max_wait_minutes": 30
+    },
+    {
+      "id": 9,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T10:00",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 6,
+      "guest_ids": [
+        26,
+        16,
+        1,
+        3
+      ],
+      "first_landing": "2027-06-11T08:50",
+      "last_landing": "2027-06-11T09:30",
+      "max_wait_minutes": 70
+    },
+    {
+      "id": 10,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T11:15",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 7,
+      "guest_ids": [
+        19,
+        14,
+        24
+      ],
+      "first_landing": "2027-06-11T10:15",
+      "last_landing": "2027-06-11T10:45",
+      "max_wait_minutes": 60
+    },
+    {
+      "id": 11,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T13:25",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 9,
+      "guest_ids": [
+        37,
+        34,
+        10,
+        15
+      ],
+      "first_landing": "2027-06-11T12:05",
+      "last_landing": "2027-06-11T12:55",
+      "max_wait_minutes": 80
+    },
+    {
+      "id": 12,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T15:10",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 7,
+      "guest_ids": [
+        30,
+        25,
+        40,
+        8
+      ],
+      "first_landing": "2027-06-11T14:05",
+      "last_landing": "2027-06-11T14:40",
+      "max_wait_minutes": 65
+    },
+    {
+      "id": 13,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T16:35",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 2,
+      "guest_ids": [
+        20,
+        7
+      ],
+      "first_landing": "2027-06-11T15:10",
+      "last_landing": "2027-06-11T16:05",
+      "max_wait_minutes": 85
+    },
+    {
+      "id": 14,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T19:45",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 5,
+      "guest_ids": [
+        11,
+        32,
+        22,
+        29
+      ],
+      "first_landing": "2027-06-11T18:30",
+      "last_landing": "2027-06-11T19:15",
+      "max_wait_minutes": 75
+    },
+    {
+      "id": 15,
+      "direction": "arrival",
+      "depart_at": "2027-06-11T22:10",
+      "from_loc": "Naples International Airport (NAP)",
+      "to_loc": "Ravello town square (hotel drop-offs)",
+      "capacity": 14,
+      "seats_taken": 2,
+      "guest_ids": [
+        23
+      ],
+      "first_landing": "2027-06-11T21:40",
+      "last_landing": "2027-06-11T21:40",
+      "max_wait_minutes": 30
+    }
+  ],
+  "assignments": [
+    {
+      "guest_id": 12,
+      "name": "Guest 12",
+      "arrival_flight": "AZ 1657",
+      "arrival_at": "2027-06-10T07:05",
+      "party_size": 2,
+      "run_id": 1,
+      "depart_at": "2027-06-10T07:35",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 31,
+      "name": "Guest 31",
+      "arrival_flight": "AZ 1509",
+      "arrival_at": "2027-06-10T09:55",
+      "party_size": 1,
+      "run_id": 2,
+      "depart_at": "2027-06-10T10:25",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 6,
+      "name": "Guest 06",
+      "arrival_flight": "U2 1376",
+      "arrival_at": "2027-06-10T11:15",
+      "party_size": 4,
+      "run_id": 3,
+      "depart_at": "2027-06-10T12:00",
+      "wait_minutes": 45
+    },
+    {
+      "guest_id": 9,
+      "name": "Guest 09",
+      "arrival_flight": "IB 1796",
+      "arrival_at": "2027-06-10T11:30",
+      "party_size": 4,
+      "run_id": 3,
+      "depart_at": "2027-06-10T12:00",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 13,
+      "name": "Guest 13",
+      "arrival_flight": "IB 1690",
+      "arrival_at": "2027-06-10T11:30",
+      "party_size": 2,
+      "run_id": 3,
+      "depart_at": "2027-06-10T12:00",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 21,
+      "name": "Guest 21",
+      "arrival_flight": "AF 2236",
+      "arrival_at": "2027-06-10T12:10",
+      "party_size": 3,
+      "run_id": 4,
+      "depart_at": "2027-06-10T13:35",
+      "wait_minutes": 85
+    },
+    {
+      "guest_id": 5,
+      "name": "Guest 05",
+      "arrival_flight": "LH 2901",
+      "arrival_at": "2027-06-10T13:00",
+      "party_size": 1,
+      "run_id": 4,
+      "depart_at": "2027-06-10T13:35",
+      "wait_minutes": 35
+    },
+    {
+      "guest_id": 28,
+      "name": "Guest 28",
+      "arrival_flight": "AZ 1653",
+      "arrival_at": "2027-06-10T13:05",
+      "party_size": 2,
+      "run_id": 4,
+      "depart_at": "2027-06-10T13:35",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 18,
+      "name": "Guest 18",
+      "arrival_flight": "AZ 1566",
+      "arrival_at": "2027-06-10T13:50",
+      "party_size": 2,
+      "run_id": 5,
+      "depart_at": "2027-06-10T14:50",
+      "wait_minutes": 60
+    },
+    {
+      "guest_id": 33,
+      "name": "Guest 33",
+      "arrival_flight": "LH 1534",
+      "arrival_at": "2027-06-10T14:20",
+      "party_size": 2,
+      "run_id": 5,
+      "depart_at": "2027-06-10T14:50",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 27,
+      "name": "Guest 27",
+      "arrival_flight": "U2 1710",
+      "arrival_at": "2027-06-10T15:15",
+      "party_size": 1,
+      "run_id": 6,
+      "depart_at": "2027-06-10T16:25",
+      "wait_minutes": 70
+    },
+    {
+      "guest_id": 39,
+      "name": "Guest 39",
+      "arrival_flight": "IB 1827",
+      "arrival_at": "2027-06-10T15:30",
+      "party_size": 1,
+      "run_id": 6,
+      "depart_at": "2027-06-10T16:25",
+      "wait_minutes": 55
+    },
+    {
+      "guest_id": 38,
+      "name": "Guest 38",
+      "arrival_flight": "AF 1590",
+      "arrival_at": "2027-06-10T15:50",
+      "party_size": 2,
+      "run_id": 6,
+      "depart_at": "2027-06-10T16:25",
+      "wait_minutes": 35
+    },
+    {
+      "guest_id": 2,
+      "name": "Guest 02",
+      "arrival_flight": "AF 1453",
+      "arrival_at": "2027-06-10T15:55",
+      "party_size": 1,
+      "run_id": 6,
+      "depart_at": "2027-06-10T16:25",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 35,
+      "name": "Guest 35",
+      "arrival_flight": "AF 1282",
+      "arrival_at": "2027-06-10T19:55",
+      "party_size": 4,
+      "run_id": 7,
+      "depart_at": "2027-06-10T21:10",
+      "wait_minutes": 75
+    },
+    {
+      "guest_id": 36,
+      "name": "Guest 36",
+      "arrival_flight": "LH 2975",
+      "arrival_at": "2027-06-10T20:40",
+      "party_size": 1,
+      "run_id": 7,
+      "depart_at": "2027-06-10T21:10",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 4,
+      "name": "Guest 04",
+      "arrival_flight": "U2 2271",
+      "arrival_at": "2027-06-11T07:40",
+      "party_size": 1,
+      "run_id": 8,
+      "depart_at": "2027-06-11T08:10",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 17,
+      "name": "Guest 17",
+      "arrival_flight": "IB 1933",
+      "arrival_at": "2027-06-11T07:40",
+      "party_size": 3,
+      "run_id": 8,
+      "depart_at": "2027-06-11T08:10",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 26,
+      "name": "Guest 26",
+      "arrival_flight": "IB 1790",
+      "arrival_at": "2027-06-11T08:50",
+      "party_size": 1,
+      "run_id": 9,
+      "depart_at": "2027-06-11T10:00",
+      "wait_minutes": 70
+    },
+    {
+      "guest_id": 16,
+      "name": "Guest 16",
+      "arrival_flight": "LH 1053",
+      "arrival_at": "2027-06-11T09:20",
+      "party_size": 1,
+      "run_id": 9,
+      "depart_at": "2027-06-11T10:00",
+      "wait_minutes": 40
+    },
+    {
+      "guest_id": 1,
+      "name": "Guest 01",
+      "arrival_flight": "AZ 1887",
+      "arrival_at": "2027-06-11T09:30",
+      "party_size": 2,
+      "run_id": 9,
+      "depart_at": "2027-06-11T10:00",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 3,
+      "name": "Guest 03",
+      "arrival_flight": "AF 2150",
+      "arrival_at": "2027-06-11T09:30",
+      "party_size": 2,
+      "run_id": 9,
+      "depart_at": "2027-06-11T10:00",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 19,
+      "name": "Guest 19",
+      "arrival_flight": "AF 2579",
+      "arrival_at": "2027-06-11T10:15",
+      "party_size": 3,
+      "run_id": 10,
+      "depart_at": "2027-06-11T11:15",
+      "wait_minutes": 60
+    },
+    {
+      "guest_id": 14,
+      "name": "Guest 14",
+      "arrival_flight": "U2 1441",
+      "arrival_at": "2027-06-11T10:20",
+      "party_size": 2,
+      "run_id": 10,
+      "depart_at": "2027-06-11T11:15",
+      "wait_minutes": 55
+    },
+    {
+      "guest_id": 24,
+      "name": "Guest 24",
+      "arrival_flight": "LH 1782",
+      "arrival_at": "2027-06-11T10:45",
+      "party_size": 2,
+      "run_id": 10,
+      "depart_at": "2027-06-11T11:15",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 37,
+      "name": "Guest 37",
+      "arrival_flight": "U2 2660",
+      "arrival_at": "2027-06-11T12:05",
+      "party_size": 1,
+      "run_id": 11,
+      "depart_at": "2027-06-11T13:25",
+      "wait_minutes": 80
+    },
+    {
+      "guest_id": 34,
+      "name": "Guest 34",
+      "arrival_flight": "AF 2791",
+      "arrival_at": "2027-06-11T12:40",
+      "party_size": 3,
+      "run_id": 11,
+      "depart_at": "2027-06-11T13:25",
+      "wait_minutes": 45
+    },
+    {
+      "guest_id": 10,
+      "name": "Guest 10",
+      "arrival_flight": "AF 1983",
+      "arrival_at": "2027-06-11T12:50",
+      "party_size": 2,
+      "run_id": 11,
+      "depart_at": "2027-06-11T13:25",
+      "wait_minutes": 35
+    },
+    {
+      "guest_id": 15,
+      "name": "Guest 15",
+      "arrival_flight": "U2 1856",
+      "arrival_at": "2027-06-11T12:55",
+      "party_size": 3,
+      "run_id": 11,
+      "depart_at": "2027-06-11T13:25",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 30,
+      "name": "Guest 30",
+      "arrival_flight": "AZ 2992",
+      "arrival_at": "2027-06-11T14:05",
+      "party_size": 2,
+      "run_id": 12,
+      "depart_at": "2027-06-11T15:10",
+      "wait_minutes": 65
+    },
+    {
+      "guest_id": 25,
+      "name": "Guest 25",
+      "arrival_flight": "U2 2119",
+      "arrival_at": "2027-06-11T14:15",
+      "party_size": 3,
+      "run_id": 12,
+      "depart_at": "2027-06-11T15:10",
+      "wait_minutes": 55
+    },
+    {
+      "guest_id": 40,
+      "name": "Guest 40",
+      "arrival_flight": "AZ 2500",
+      "arrival_at": "2027-06-11T14:20",
+      "party_size": 1,
+      "run_id": 12,
+      "depart_at": "2027-06-11T15:10",
+      "wait_minutes": 50
+    },
+    {
+      "guest_id": 8,
+      "name": "Guest 08",
+      "arrival_flight": "AF 1476",
+      "arrival_at": "2027-06-11T14:40",
+      "party_size": 1,
+      "run_id": 12,
+      "depart_at": "2027-06-11T15:10",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 20,
+      "name": "Guest 20",
+      "arrival_flight": "AF 2420",
+      "arrival_at": "2027-06-11T15:10",
+      "party_size": 1,
+      "run_id": 13,
+      "depart_at": "2027-06-11T16:35",
+      "wait_minutes": 85
+    },
+    {
+      "guest_id": 7,
+      "name": "Guest 07",
+      "arrival_flight": "LH 2842",
+      "arrival_at": "2027-06-11T16:05",
+      "party_size": 1,
+      "run_id": 13,
+      "depart_at": "2027-06-11T16:35",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 11,
+      "name": "Guest 11",
+      "arrival_flight": "AF 1527",
+      "arrival_at": "2027-06-11T18:30",
+      "party_size": 2,
+      "run_id": 14,
+      "depart_at": "2027-06-11T19:45",
+      "wait_minutes": 75
+    },
+    {
+      "guest_id": 32,
+      "name": "Guest 32",
+      "arrival_flight": "AZ 2951",
+      "arrival_at": "2027-06-11T18:45",
+      "party_size": 1,
+      "run_id": 14,
+      "depart_at": "2027-06-11T19:45",
+      "wait_minutes": 60
+    },
+    {
+      "guest_id": 22,
+      "name": "Guest 22",
+      "arrival_flight": "LH 2685",
+      "arrival_at": "2027-06-11T18:50",
+      "party_size": 1,
+      "run_id": 14,
+      "depart_at": "2027-06-11T19:45",
+      "wait_minutes": 55
+    },
+    {
+      "guest_id": 29,
+      "name": "Guest 29",
+      "arrival_flight": "AZ 1066",
+      "arrival_at": "2027-06-11T19:15",
+      "party_size": 1,
+      "run_id": 14,
+      "depart_at": "2027-06-11T19:45",
+      "wait_minutes": 30
+    },
+    {
+      "guest_id": 23,
+      "name": "Guest 23",
+      "arrival_flight": "LH 2647",
+      "arrival_at": "2027-06-11T21:40",
+      "party_size": 2,
+      "run_id": 15,
+      "depart_at": "2027-06-11T22:10",
+      "wait_minutes": 30
+    }
+  ],
+  "sample_explanations": [
+    "Shuttle 1 leaves Naples International Airport (NAP) at 07:35 on Thursday 10 June, half an hour after the last passenger on it lands at 07:05 (flight AZ 1657). It takes Guest 12 to Ravello town square (hotel drop-offs) — 2 of 14 seats, 12 still free. The longest anyone waits at the airport is 30 minutes.",
+    "Shuttle 2 leaves Naples International Airport (NAP) at 10:25 on Thursday 10 June, half an hour after the last passenger on it lands at 09:55 (flight AZ 1509). It takes Guest 31 to Ravello town square (hotel drop-offs) — 1 of 14 seats, 13 still free. The longest anyone waits at the airport is 30 minutes.",
+    "Shuttle 3 leaves Naples International Airport (NAP) at 12:00 on Thursday 10 June, half an hour after the last passenger on it lands at 11:30 (flight IB 1796). It takes Guest 06, Guest 09 and Guest 13 to Ravello town square (hotel drop-offs) — 10 of 14 seats, 4 still free. The longest anyone waits at the airport is 45 minutes."
+  ],
+  "sample_guest_pickup": "Guest 12, you land at 07:05 on Thursday 10 June on flight AZ 1657. Your shuttle leaves Naples International Airport (NAP) at 07:35 — that is 30 minutes after you touch down, which is time for passport control and bags. Please be at the pickup point by 07:25. It drops you at Ravello town square (hotel drop-offs)."
+}
