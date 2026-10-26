@@ -107,6 +107,19 @@ CSS = """
 figure{margin:0}
 figure img{display:block;width:auto;max-width:100%;max-height:54vh;
   margin:0 auto;border:1px solid var(--rule);background:#fff}
+
+/* A screenshot slide: the image fills what is left after a one-line eyebrow
+   and heading, and is the dominant object rather than an inset. The px ceiling
+   sits alongside the vh so the image cannot overflow the fixed 1280x720 canvas
+   on a tall window — vh resolves against the browser, not against the slide. */
+.shot-slide{display:flex;flex-direction:column;height:100%}
+.shot-slide h3{font-size:1.12em;margin-bottom:.35em}
+.shot-slide figure{flex:1;min-height:0;display:flex;flex-direction:column;
+  justify-content:flex-start;align-items:center}
+.shot-slide figure img{max-height:min(72vh,600px);max-width:92%;width:auto;
+  object-fit:contain;margin:0 auto}
+.shot-slide figcaption{text-align:center;max-width:88%;margin:.5em auto 0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 figcaption{font-family:var(--mono);font-size:.34em;letter-spacing:.06em;
   color:var(--muted);margin-top:.45em;line-height:1.4}
 .ph{border:2px dashed var(--azure);background:#fff;display:flex;flex-direction:column;
@@ -149,7 +162,7 @@ FALLBACK_JS = """
       Reveal.initialize({
         hash:false, controls:true, progress:true, slideNumber:'c/t',
         transition:'fade', transitionSpeed:'fast',
-        width:1280, height:760, margin:0.07,
+        width:1280, height:720, margin:0.06,
         minScale:0.2, maxScale:1.6
       });
     } else {
@@ -254,104 +267,43 @@ def build() -> None:
 
     # 5 ----------------------------------------------------------------
     S.append(f"""
-<section>
+<section class="shot-slide">
   <span class="eyebrow">Demo · the guest</span>
-  <h3>Everything you owe, and when you land.</h3>
-  <div class="figs" style="margin-top:.5em">
-    {fig("01", filled, "The guest page — what this guest still owes, computed from their own row.")}
-    {fig("03", filled, "The arrival timeline — land, passport and bags, pickup, arrive.")}
-  </div>
+  <h3>Everything you owe, above the fold.</h3>
+  {fig("01", filled, "The guest page — computed from this guest's own row.")}
 </section>""")
 
     # 6 ----------------------------------------------------------------
-    ls = loop["summary"]
     S.append(f"""
-<section>
-  <span class="eyebrow">Demo · the loop that is the point</span>
-  <div class="steps">
-    <div><span class="w terra">asks</span>
-      <span class="cap">guest · no fact exists</span></div>
-    <div class="arrow">→</div>
-    <div><span class="w terra">escalates</span>
-      <span class="cap">Bells does not guess</span></div>
-    <div class="arrow">→</div>
-    <div><span class="w azure">approves</span>
-      <span class="cap">the couple, once</span></div>
-    <div class="arrow">→</div>
-    <div><span class="w lemon">answers</span>
-      <span class="cap">itself, forever</span></div>
-  </div>
-  <div class="row tight">
-    <div class="card"><span class="big sm">{s["facts_total"]}
-      <span class="unit">·</span> {s["facts_from_console"]}</span>
-      <span class="cap">facts Bells knows · from the console</span></div>
-    <div class="card lemon"><span class="big sm">{ls["answered_unaided_on_second_ask"]}/{ls["of"]}</span>
-      <span class="cap">answered unaided next time</span></div>
-    <div style="flex:2.4">{fig("07", filled, "The host console — 189 of 222 answered, 14.9% escalated, 567 minutes saved, 41 facts of which 6 came from this console.")}</div>
-  </div>
-  <span class="src">output/escalation_loop.json</span>
+<section class="shot-slide">
+  <span class="eyebrow">The arrival · {bef["runs"]} transfers → {aft["runs"]}, €{imp["transfer_cost_saved_eur"]:,.0f} saved</span>
+  <h3>Not a timetable. Your pickup.</h3>
+  {fig("03", filled, f'−{imp["runs_saved_pct"]}% transfers and {imp["driver_hours_saved"]} driver hours, for +{imp["extra_wait_per_person_minutes"]} min of waiting against a cap of {imp["wait_limit_minutes"]} I set')}
 </section>""")
 
     # 7 ----------------------------------------------------------------
+    ls = loop["summary"]
     S.append(f"""
-<section>
-  <span class="eyebrow">Cost</span>
-  <span class="big azure">${s["cost_per_turn"]:.5f}</span>
-  <span class="cap">per question · {s["turns"]} real turns · ${s["cost_usd"]:.4f} in total</span>
-  <div class="row" style="margin-top:.8em">
-    <div class="card lemon"><span class="big sm">{s["cache_hit_pct"]}<span class="unit">%</span></span>
-      <span class="cap">input served from cache</span></div>
-    <div class="card"><span class="big sm">−{cost["savings"]["cost_pct"]}<span class="unit">%</span></span>
-      <span class="cap">cost, cached vs busted</span></div>
-    <div class="card"><span class="big sm">{cost["cold"]["correct"]}/{cost["cold"]["of"]}</span>
-      <span class="cap">facts returned · both passes</span></div>
-  </div>
-  <p class="kicker" style="margin-top:.6em;font-size:.62em">Caching cut cost by
-  half and latency by {cost["savings"]["latency_pct"]}% without losing a single
-  required fact.</p>
-  <span class="src">output/audit_trail.json · output/cost_results.json</span>
+<section class="shot-slide">
+  <span class="eyebrow">The loop that is the point</span>
+  <h3>Asks → escalates → the couple approve once → answers itself.</h3>
+  {fig("07", filled, f'{s["answered"]} of {s["turns"]} answered · {s["minutes_saved"]} minutes saved · {s["facts_total"]} facts, {s["facts_from_console"]} from this console')}
 </section>""")
 
     # 8 ----------------------------------------------------------------
     S.append(f"""
-<section>
-  <span class="eyebrow">Safety</span>
-  <div class="row">
-    <div style="flex:.85">
-      <span class="big azure">{sm["passed"]}<span class="unit">/{sm["total"]}</span></span>
-      <span class="cap">hostile probes passed</span>
-      <ul style="font-size:.6em;margin-top:.7em">
-        <li>6/6 privacy · 3/3 injection</li>
-        <li>2/2 content filter · 1/1 runaway</li>
-        <li>7/7 data-layer · 3/3 handler</li>
-      </ul>
-      <p class="kicker" style="font-size:.52em;margin-top:.5em">Private rows are
-      filtered in SQL. The agent cannot leak what it was never given.</p>
-    </div>
-    <div style="flex:1.15">{fig("05", filled, "Asked for the couple's private number. Refused — the row never entered the model's context.")}</div>
-  </div>
-  <span class="src">output/safety_results.json</span>
+<section class="shot-slide">
+  <span class="eyebrow">Cost · ${s["cost_per_turn"]:.5f} a question</span>
+  <h3>{s["cache_hit_pct"]}% of input served from cache.</h3>
+  {fig("10", filled, f'{s["turns"]} turns · ${s["cost_usd"]:.4f} in total · caching cut cost {cost["savings"]["cost_pct"]}% with {cost["cold"]["correct"]}/{cost["cold"]["of"]} facts intact')}
 </section>""")
 
     # 9 ----------------------------------------------------------------
     S.append(f"""
-<section>
-  <span class="eyebrow">Impact</span>
-  <div class="row" style="align-items:flex-start">
-    <div><span class="big terra">{bef["runs"]}<span class="unit"> → </span>{aft["runs"]}</span>
-      <span class="cap">airport transfers · −{imp["runs_saved_pct"]}%</span></div>
-    <div><span class="big lemon">€{imp["transfer_cost_saved_eur"]:,.0f}</span>
-      <span class="cap">saved · {imp["driver_hours_saved"]} driver hours</span></div>
-    <div><span class="big azure">{s["answered"]}<span class="unit">/{s["turns"]}</span></span>
-      <span class="cap">answered automatically · {s["escalated"]} escalated, {s["escalation_pct"]}%</span></div>
-  </div>
-  <p class="kicker" style="margin-top:.55em;font-size:.6em">
-  {s["minutes_saved"]} minutes of the couple's time, at 3 minutes a question —
-  the figure on the console in slide 6.</p>
-  <p class="kicker" style="margin-top:.3em;font-size:.6em">The trade I chose:
-  +{imp["extra_wait_per_person_minutes"]} minutes of waiting per person, against
-  a cap of {imp["wait_limit_minutes"]} that I set.</p>
-  <span class="src">output/solver_results.json · output/audit_trail.json</span>
+<section class="shot-slide">
+  <span class="eyebrow">Safety · {sm["passed"]} of {sm["total"]} hostile probes passed</span>
+  <h3>0 agents, 0 tools — refused before anything was read.</h3>
+  {fig("05", filled, "6/6 privacy · 3/3 injection · 2/2 content filter · 1/1 runaway")}
 </section>""")
 
     # 10 ---------------------------------------------------------------

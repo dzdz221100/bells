@@ -1,18 +1,23 @@
-"""Check that report.html and slides.html quote the pinned figures, and only those.
+"""Check that no number in the prose contradicts a number in a screenshot.
 
-The rule this enforces: a number in the text must match the number visible in
-the screenshot on the same page. Screenshots are frozen; the audit trail is
-not. So the documents quote `figures_pinned.json`, and this script fails if
-either document still contains a figure from some other moment.
+The rule: a figure quoted in the text must be the figure visible in the
+screenshot on the same page. Screenshots are frozen; the audit trail is not.
+So both documents quote `figures_pinned.json`, pinned from the same trail the
+screenshots were captured against, and this script fails if either document
+has drifted.
 
-It looks for two things:
+Two checks, and they are deliberately different:
 
-  * every pinned figure appears in both documents, in the form it is written;
-  * no *stale* figure appears — a value that was true of an earlier trail and
-    would now contradict the console in the picture.
+  * **no contradiction** (both documents) — no figure from an earlier trail may
+    survive anywhere. This is the rule itself. A page saying "189 of 222" beside
+    a console screenshot reading "193 of 226" is the exact failure being
+    prevented.
+  * **completeness** (report only) — the report is the document that has to
+    carry every figure. The deck quotes a headline subset and leaves the rest to
+    the screenshots it shows, which is correct for slides.
 
 Usage:  python output/check_figures.py
-Exit:   0 if both documents are consistent, 1 if not.
+Exit:   0 if consistent, 1 if not.
 """
 
 from __future__ import annotations
@@ -26,19 +31,33 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "output"
 PIN = OUT / "figures_pinned.json"
-DOCS = [OUT / "report.html", OUT / "slides.html"]
+REPORT = OUT / "report.html"
+SLIDES = OUT / "slides.html"
+
+# Figures that were true of an earlier trail. Any of these appearing now means
+# a document was not rebuilt, or was rebuilt against a trail that had moved on
+# from the screenshots. Written as regexes with boundaries so a digit run
+# inside a larger number never trips them.
+SUPERSEDED = [
+    r"\b131 turns\b", r"\b219 turns\b", r"\b222 turns\b",
+    r"\b186 answered\b", r"\b189 answered\b", r"\b189 of 222\b",
+    r"\b90\.1%", r"\b84\.9%", r"\b85\.1%", r"\b14\.9%",
+    r"\b72\.3%", r"\b74\.0%", r"\b73\.7%",
+    r"\$0\.04245\b", r"\$0\.071068\b", r"\$0\.0717\b", r"\$0\.0711\b",
+    r"\b567 minutes\b", r"\b558 minutes\b", r"\b9\.3 hours\b", r"\b9\.4 hours\b",
+    r"\b9\.5 hours\b",
+]
 
 
 def text_of(path: Path) -> str:
     raw = path.read_text(encoding="utf-8")
-    # drop the base64 payloads before searching, or a stray digit run inside an
-    # image would count as a figure
+    # strip the base64 payloads first, or a digit run inside an image trips this
     raw = re.sub(r'src="data:[^"]+"', 'src="[image]"', raw)
     raw = re.sub(r"<style>.*?</style>", " ", raw, flags=re.S)
     raw = re.sub(r"<script>.*?</script>", " ", raw, flags=re.S)
     plain = html.unescape(re.sub(r"<[^>]+>", " ", raw))
-    # "73.7 %" and "$ 0.00032" happen when markup splits a number from its
-    # unit for styling; they are the same figure on screen.
+    # "73.5 %" and "$ 0.00032" happen when markup splits a number from its unit
+    # for styling; on screen they are one figure.
     plain = re.sub(r"(\d)\s+%", r"\1%", plain)
     plain = re.sub(r"\$\s+(\d)", r"$\1", plain)
     return re.sub(r"\s+", " ", plain)
@@ -50,47 +69,60 @@ def main() -> int:
         return 1
     p = json.loads(PIN.read_text(encoding="utf-8"))
 
-    # what each document must say, and what it must no longer say
-    must: list[tuple[str, str]] = [
+    required = [
         ("turns", str(p["turns"])),
         ("answered automatically", str(p["answered"])),
         ("escalated", str(p["escalated"])),
         ("escalation rate", f'{p["escalation_pct"]}%'),
         ("minutes saved", str(p["minutes_saved"])),
+        ("hours saved", f'{p["hours_saved"]} hours'),
         ("facts Bells knows", str(p["facts_total"])),
         ("facts from the console", str(p["facts_from_console"])),
         ("cache hit rate", f'{p["cache_hit_pct"]}%'),
+        ("total cost", f'${p["cost_usd"]:.4f}'),
         ("cost per question", f'${p["cost_per_turn"]:.5f}'),
     ]
-    # figures from earlier trails that must not survive anywhere
-    stale = ["131 turns", "219", "186", "90.1%", "84.9%", "85.1%",
-             "72.3%", "74.0%", "$0.04245", "$0.071068", "9.3 hours", "9.5 hours"]
+    # what the deck has to carry in its own text; the rest it shows in pictures
+    slide_headlines = ["turns", "answered automatically", "cache hit rate",
+                       "total cost", "cost per question", "minutes saved",
+                       "facts Bells knows"]
 
     failures: list[str] = []
-    for doc in DOCS:
+    for doc in (REPORT, SLIDES):
         if not doc.exists():
             failures.append(f"{doc.name}: not built")
             continue
         body = text_of(doc)
-        for label, value in must:
+
+        for pattern in SUPERSEDED:
+            hit = re.search(pattern, body)
+            if hit:
+                where = body[max(0, hit.start() - 60):hit.end() + 40]
+                failures.append(f"{doc.name}: contradicts the screenshots — "
+                                f"{hit.group(0)!r} in “…{where.strip()}…”")
+
+        wanted = required if doc is REPORT else [
+            r for r in required if r[0] in slide_headlines]
+        for label, value in wanted:
             if value not in body:
                 failures.append(f"{doc.name}: missing {label} = {value}")
-        for old in stale:
-            if old in body:
-                failures.append(f"{doc.name}: still contains stale figure {old!r}")
 
-    print(f"pinned {PIN.relative_to(ROOT)} · {p['turns']} turns, "
-          f"{p['answered']} answered, {p['escalation_pct']}% escalated, "
-          f"{p['minutes_saved']} min, {p['facts_total']} facts "
-          f"({p['facts_from_console']} from the console), "
-          f"{p['cache_hit_pct']}% cache, ${p['cost_usd']:.4f}")
+    print(f"pinned from {PIN.relative_to(ROOT)} · {p['turns']} turns · "
+          f"{p['answered']} answered · {p['escalated']} escalated "
+          f"({p['escalation_pct']}%) · {p['minutes_saved']} min "
+          f"({p['hours_saved']} h) · {p['facts_total']} facts "
+          f"({p['facts_from_console']} from the console) · "
+          f"{p['cache_hit_pct']}% cached · ${p['cost_usd']:.4f} · "
+          f"${p['cost_per_turn']:.5f} per question")
+
     if failures:
-        print("\nINCONSISTENT:")
+        print("\nFAILED:")
         for f in failures:
             print(f"  {f}")
         return 1
-    print("\nreport.html and slides.html both quote the pinned figures, "
-          "and no stale figure survives in either.")
+
+    print("\nreport.html carries every pinned figure; slides.html carries the "
+          "headline set; neither contradicts the screenshots.")
     return 0
 
 
