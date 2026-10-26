@@ -172,6 +172,20 @@ type falls back cleanly if those fail. `slides.html` additionally pulls
 reveal.js from a CDN, and lays itself out as one readable page if that CDN is
 unreachable.
 
+The figures both documents quote are **pinned**. A screenshot is a frozen
+instant; the audit trail is not, so a document rebuilt an hour later would
+otherwise quote numbers that no longer match the console in the picture beside
+them. `output/figures_pinned.json` freezes the set. Capture the screenshots and
+re-pin in the same sitting:
+
+```bash
+backend/.venv/bin/python output/build_report.py --pin
+backend/.venv/bin/python output/check_figures.py
+```
+
+`check_figures.py` fails if either document is missing a pinned figure or still
+contains one from an earlier trail.
+
 Screenshots are matched to their place in the report by numeric prefix. Drop
 these into `output/screenshots/` and rebuild; a slot with no file prints a
 labelled frame saying what is missing rather than a broken image.

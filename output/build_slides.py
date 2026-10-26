@@ -25,8 +25,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from build_report import (  # noqa: E402
-    DIAGRAM, REPO_IS_PUBLIC, REPO_URL, SLOTS, collect_shots, h, load,
-    spend_from_trail,
+    DIAGRAM, REPO_IS_PUBLIC, REPO_URL, SLOTS, collect_shots, figures, h, load,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -101,8 +100,8 @@ CSS = """
   padding:0 .15em;line-height:1}
 
 figure{margin:0}
-figure img{width:100%;display:block;border:1px solid var(--rule);background:#fff;
-  max-height:52vh;object-fit:contain}
+figure img{display:block;width:auto;max-width:100%;max-height:54vh;
+  margin:0 auto;border:1px solid var(--rule);background:#fff}
 figcaption{font-family:var(--mono);font-size:.34em;letter-spacing:.06em;
   color:var(--muted);margin-top:.45em;line-height:1.4}
 .ph{border:2px dashed var(--azure);background:#fff;display:flex;flex-direction:column;
@@ -179,7 +178,7 @@ def build() -> None:
     solver = load("solver_results.json")
     loop = load("escalation_loop.json")
 
-    s = spend_from_trail(trail)
+    s = figures()
     filled, _ = collect_shots()
     imp, bef, aft = solver["impact"], solver["before"], solver["after"]
     sm = safety["summary"]
@@ -277,12 +276,12 @@ def build() -> None:
       <span class="cap">itself, forever</span></div>
   </div>
   <div class="row tight">
-    <div class="card"><span class="big sm">{loop["before"]["facts_from_host_console"]}
-      <span class="unit">→</span> {loop["after"]["facts_from_host_console"]}</span>
-      <span class="cap">facts from the console</span></div>
+    <div class="card"><span class="big sm">{s["facts_total"]}
+      <span class="unit">·</span> {s["facts_from_console"]}</span>
+      <span class="cap">facts Bells knows · from the console</span></div>
     <div class="card lemon"><span class="big sm">{ls["answered_unaided_on_second_ask"]}/{ls["of"]}</span>
       <span class="cap">answered unaided next time</span></div>
-    <div style="flex:1.6">{fig("07", filled, "The host console: inbox, impact, spend.")}</div>
+    <div style="flex:2.4">{fig("07", filled, "The host console — 189 of 222 answered, 14.9% escalated, 567 minutes saved, 41 facts of which 6 came from this console.")}</div>
   </div>
   <span class="src">output/escalation_loop.json</span>
 </section>""")
@@ -292,7 +291,7 @@ def build() -> None:
 <section>
   <span class="eyebrow">Cost</span>
   <span class="big azure">${s["cost_per_turn"]:.5f}</span>
-  <span class="cap">per question answered · {s["turns"]} real turns</span>
+  <span class="cap">per question · {s["turns"]} real turns · ${s["cost_usd"]:.4f} in total</span>
   <div class="row" style="margin-top:.8em">
     <div class="card lemon"><span class="big sm">{s["cache_hit_pct"]}<span class="unit">%</span></span>
       <span class="cap">input served from cache</span></div>
@@ -337,10 +336,13 @@ def build() -> None:
       <span class="cap">airport transfers · −{imp["runs_saved_pct"]}%</span></div>
     <div><span class="big lemon">€{imp["transfer_cost_saved_eur"]:,.0f}</span>
       <span class="cap">saved · {imp["driver_hours_saved"]} driver hours</span></div>
-    <div><span class="big azure">{s["automation_pct"]}<span class="unit">%</span></span>
-      <span class="cap">of {s["turns"]} questions, no couple</span></div>
+    <div><span class="big azure">{s["answered"]}<span class="unit">/{s["turns"]}</span></span>
+      <span class="cap">answered automatically · {s["escalated"]} escalated, {s["escalation_pct"]}%</span></div>
   </div>
-  <p class="kicker" style="margin-top:.8em;font-size:.62em">The trade I chose:
+  <p class="kicker" style="margin-top:.55em;font-size:.6em">
+  {s["minutes_saved"]} minutes of the couple's time, at 3 minutes a question —
+  the figure on the console in slide 6.</p>
+  <p class="kicker" style="margin-top:.3em;font-size:.6em">The trade I chose:
   +{imp["extra_wait_per_person_minutes"]} minutes of waiting per person, against
   a cap of {imp["wait_limit_minutes"]} that I set.</p>
   <span class="src">output/solver_results.json · output/audit_trail.json</span>

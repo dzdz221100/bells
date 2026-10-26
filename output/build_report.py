@@ -20,6 +20,7 @@ import base64
 import html
 import json
 import mimetypes
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -94,10 +95,33 @@ SLOTS: list[dict[str, str]] = [
 ]
 
 
+# A retina capture is several times larger than anything these documents can
+# show — the widest a figure ever renders is about 1000 px on screen and 66 mm
+# in print. Downscaling at embed time keeps the file small enough to email
+# without costing any visible detail.
+MAX_EDGE = 1800
+
+
 def embed(path: Path) -> str:
     mime = mimetypes.guess_type(path.name)[0] or "image/png"
-    data = base64.b64encode(path.read_bytes()).decode("ascii")
-    return f"data:{mime};base64,{data}"
+    raw = path.read_bytes()
+    try:
+        from io import BytesIO
+
+        from PIL import Image
+
+        img = Image.open(BytesIO(raw))
+        if max(img.size) > MAX_EDGE:
+            img.thumbnail((MAX_EDGE, MAX_EDGE), Image.LANCZOS)
+            buf = BytesIO()
+            # PNG, not JPEG: these are screenshots of text, and JPEG artefacts
+            # around small type are exactly what a reader would notice.
+            img.save(buf, format="PNG", optimize=True)
+            if buf.tell() < len(raw):
+                raw, mime = buf.getvalue(), "image/png"
+    except Exception:
+        pass  # no Pillow, or an image it cannot read — embed it untouched
+    return f"data:{mime};base64,{base64.b64encode(raw).decode('ascii')}"
 
 
 def collect_shots() -> tuple[dict[str, dict], list[dict]]:
@@ -177,6 +201,65 @@ def spend_from_trail(trail: list[dict]) -> dict[str, Any]:
         "cost_usd": round(cost, 6),
         "cost_per_turn": round(cost / len(turns), 6) if turns else 0,
     }
+
+
+PIN = OUT / "figures_pinned.json"
+
+
+def db_fact_counts() -> dict[str, int]:
+    """Fact totals, read the way the host console's Impact panel reads them."""
+    import sqlite3
+    db = ROOT / "data" / "bells.db"
+    conn = sqlite3.connect(db)
+    try:
+        total = conn.execute(
+            "SELECT COUNT(*) FROM wedding_facts WHERE wedding_id = 1").fetchone()[0]
+        from_console = conn.execute(
+            "SELECT COUNT(*) FROM wedding_facts WHERE wedding_id = 1"
+            " AND source = 'host console'").fetchone()[0]
+    finally:
+        conn.close()
+    return {"facts_total": total, "facts_from_console": from_console}
+
+
+def figures() -> dict[str, Any]:
+    """The numbers the documents quote — pinned to the moment of the screenshots.
+
+    A screenshot is a frozen instant. The audit trail is not: every live turn
+    moves it, so a report regenerated an hour later would quote numbers that no
+    longer match the console in the picture beside them. `figures_pinned.json`
+    freezes the set, and `--pin` refreshes it deliberately. Capture the
+    screenshots and re-pin in the same sitting and the two can never disagree.
+    """
+    if PIN.exists():
+        pinned = json.loads(PIN.read_text(encoding="utf-8"))
+        pinned["_pinned"] = True
+        return pinned
+    live = spend_from_trail(load("audit_trail.json"))
+    live.update(db_fact_counts())
+    live["minutes_saved"] = live["answered"] * MINUTES_PER_QUESTION
+    live["hours_saved"] = f'{live["minutes_saved"] / 60:.1f}'
+    live["escalation_pct"] = round(live["escalated"] / live["turns"] * 100, 1)
+    live["_pinned"] = False
+    return live
+
+
+def write_pin() -> dict[str, Any]:
+    """Freeze the current figures. Run this when the screenshots are taken."""
+    live = spend_from_trail(load("audit_trail.json"))
+    live.update(db_fact_counts())
+    live["minutes_saved"] = live["answered"] * MINUTES_PER_QUESTION
+    # The console renders hours with JS toFixed(1), which rounds 9.45 down to
+    # 9.4. Match it exactly rather than printing a number the picture contradicts.
+    hours = live["minutes_saved"] / 60
+    live["hours_saved"] = f"{hours - 1e-9:.1f}"
+    live["escalation_pct"] = round(live["escalated"] / live["turns"] * 100, 1)
+    live["pinned_at"] = datetime.now().isoformat(timespec="seconds")
+    live["why"] = ("frozen so the figures quoted in report.html and slides.html "
+                   "match the host console in the screenshots taken alongside "
+                   "them; re-pin with: python output/build_report.py --pin")
+    PIN.write_text(json.dumps(live, indent=2), encoding="utf-8")
+    return live
 
 
 def richest_turn(trail: list[dict]) -> dict:
@@ -260,8 +343,8 @@ tbody tr:nth-child(even){background:rgba(47,111,143,.045)}
 
 /* ---- figures ---- */
 figure.shot{margin:1.3rem 0;page-break-inside:avoid;break-inside:avoid}
-figure.shot img{width:100%;display:block;border:1px solid var(--rule);
-  background:#fff}
+figure.shot img{display:block;width:auto;max-width:100%;max-height:60vh;
+  margin:0 auto;border:1px solid var(--rule);background:#fff}
 figcaption{font-family:var(--mono);font-size:.68rem;color:var(--muted);
   margin-top:.4rem;line-height:1.45}
 .fignum{color:var(--terra);letter-spacing:.1em;margin-right:.4rem}
@@ -446,14 +529,14 @@ def build() -> None:
     solver = load("solver_results.json")
     loop = load("escalation_loop.json")
 
-    s = spend_from_trail(trail)
+    s = figures()
     filled, extras = collect_shots()
     turn = richest_turn(trail)
 
     # --- derived, with the arithmetic shown in the page itself -------------
     q_per_wedding = GUESTS_PER_WEDDING * QUESTIONS_PER_GUEST
     cost_per_wedding = s["cost_per_turn"] * q_per_wedding
-    hours_saved = s["answered"] * MINUTES_PER_QUESTION / 60
+    # (hours come from the pinned set, so they match the console tile exactly)
 
     imp, bef, aft = solver["impact"], solver["before"], solver["after"]
     bench = solver["optimality_benchmark"]
@@ -496,8 +579,8 @@ def build() -> None:
     w('<div class="stats">')
     for v, k, cls in [
         (f'{s["turns"]}', 'model turns logged', ''),
-        (f'{s["automation_pct"]}%', 'answered without the couple', ''),
-        (money(s["cost_usd"], 5), 'total spend to date', 'lemon'),
+        (f'{s["answered"]}/{s["turns"]}', 'answered without the couple', ''),
+        (money(s["cost_usd"], 4), 'total spend to date', 'lemon'),
         (f'{imp["runs_saved_pct"]}%', 'fewer airport transfers', 'terra'),
         (f'{safety["summary"]["passed"]}/{safety["summary"]["total"]}',
          'safety probes passed', ''),
@@ -698,8 +781,8 @@ def build() -> None:
         (f'{s["turns"]}', 'turns', ''),
         (f'{t["total"]:,}', 'tokens', ''),
         (f'{s["cache_hit_pct"]}%', 'cache hit rate', 'lemon'),
-        (money(s["cost_usd"], 5), 'total', ''),
-        (money(s["cost_per_turn"]), 'per question', 'lemon'),
+        (money(s["cost_usd"], 4), 'total', ''),
+        (money(s["cost_per_turn"], 5), 'per question', 'lemon'),
     ]:
         w(f'<div class="stat {cls}"><span class="v">{h(v)}</span>'
           f'<span class="k">{h(k)}</span></div>')
@@ -1003,11 +1086,13 @@ def build() -> None:
     w(figure("03", filled))
 
     w('<h3>Questions the couple did not have to answer</h3>')
+    w('<p>These are the four tiles on the host console, in the screenshot '
+      'below.</p>')
     w('<div class="stats">')
-    for v, k, cls in [(f'{s["turns"]}', 'questions asked', ''),
-                      (f'{s["answered"]}', 'answered by Bells', ''),
-                      (f'{s["automation_pct"]}%', 'without the couple', 'lemon'),
-                      (f'{s["escalated"]}', 'escalated', 'terra')]:
+    for v, k, cls in [(f'{s["answered"]}', f'answered automatically, of {s["turns"]}', ''),
+                      (f'{s["escalation_pct"]}%', f'escalation rate · {s["escalated"]} sent to the couple', 'terra'),
+                      (f'{s["minutes_saved"]}', f'minutes saved · {s["hours_saved"]} hours', 'lemon'),
+                      (f'{s["facts_total"]}', f'facts Bells knows · {s["facts_from_console"]} from the console', '')]:
         w(f'<div class="stat {cls}"><span class="v">{h(v)}</span>'
           f'<span class="k">{h(k)}</span></div>')
     w('</div>')
@@ -1015,9 +1100,9 @@ def build() -> None:
       f'to read a question, check the answer and write a reply — the host '
       f'console’s own default, which the couple can edit on screen — '
       f'{s["answered"]} answered questions is '
-      f'<strong>{hours_saved:.1f} hours</strong> '
-      f'({s["answered"]} × {MINUTES_PER_QUESTION} ÷ 60). The three minutes is my '
-      f'assumption. The {s["answered"]} is counted.</p>')
+      f'<strong>{s["minutes_saved"]} minutes</strong>, or {s["hours_saved"]} '
+      f'hours ({s["answered"]} × {MINUTES_PER_QUESTION}). The three minutes is '
+      f'my assumption. The {s["answered"]} is counted.</p>')
     w('<span class="src-line">Source: output/audit_trail.json · '
       '/api/host/impact</span>')
     w('<div class="note warn"><p>The same caveat as the cost section: this trail '
@@ -1154,4 +1239,12 @@ def build() -> None:
 
 
 if __name__ == "__main__":
+    if "--pin" in sys.argv:
+        pinned = write_pin()
+        print(f"pinned {PIN.relative_to(ROOT)}:")
+        for k in ("turns", "answered", "escalated", "escalation_pct",
+                  "minutes_saved", "hours_saved", "facts_total",
+                  "facts_from_console", "cache_hit_pct", "cost_usd",
+                  "cost_per_turn"):
+            print(f"  {k:20} {pinned[k]}")
     build()

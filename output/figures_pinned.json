@@ -1,0 +1,26 @@
+{
+  "turns": 222,
+  "escalated": 33,
+  "answered": 189,
+  "automation_pct": 85.1,
+  "blocked": 10,
+  "writes": 3,
+  "guests_seen": 12,
+  "tokens": {
+    "input": 1178361,
+    "cached": 868057,
+    "cache_write": 305193,
+    "output": 53582,
+    "total": 1231943
+  },
+  "cache_hit_pct": 73.7,
+  "cost_usd": 0.071737,
+  "cost_per_turn": 0.000323,
+  "facts_total": 41,
+  "facts_from_console": 6,
+  "minutes_saved": 567,
+  "hours_saved": "9.4",
+  "escalation_pct": 14.9,
+  "pinned_at": "2026-10-26T00:55:24",
+  "why": "frozen so the figures quoted in report.html and slides.html match the host console in the screenshots taken alongside them; re-pin with: python output/build_report.py --pin"
+}
