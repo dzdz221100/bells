@@ -68,7 +68,12 @@ curl http://localhost:8000/api/health
 
 That reports the model, which `.env` files were found, and whether a key is
 present — never the key itself. If `api_key_present` is `false`, step 1 did not
-take.
+take, and `env_files_searched` in that same response tells you the two exact
+paths it looked at.
+
+Port 8000 has to be free: the frontend's dev proxy points at it by name. If
+something else is already there, stop it first — changing the port means
+changing [`frontend/vite.config.ts`](frontend/vite.config.ts) too.
 
 ### 3. Frontend — in a second terminal
 
