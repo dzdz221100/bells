@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-25T23:50:10",
+  "run_at": "2026-10-26T00:18:09",
   "model": "gpt-6-luna",
   "method": {
     "questions": 8,
@@ -9,48 +9,46 @@
     "note": "two questions from the first draft were replaced because the check, not the app, was wrong: a visa question asks for advice the hard rules forbid, and a wedding-day shuttle question routes to the solver rather than to the fact that answers it. Neither was replaced for being expensive or slow."
   },
   "cold": {
-    "input_tokens": 48235,
-    "cached_tokens": 21920,
-    "cache_write_tokens": 26216,
-    "output_tokens": 1789,
-    "total_tokens": 50024,
-    "cost_usd": 0.0044,
-    "total_latency_ms": 62839.7,
-    "mean_latency_ms": 7855.0,
-    "median_latency_ms": 7706.5,
+    "input_tokens": 47068,
+    "cached_tokens": 21918,
+    "cache_write_tokens": 25054,
+    "output_tokens": 1404,
+    "total_tokens": 48472,
+    "cost_usd": 0.004063,
+    "total_latency_ms": 74557.4,
+    "mean_latency_ms": 9319.7,
+    "median_latency_ms": 8345.0,
     "correct": 8,
     "of": 8
   },
   "warm": {
-    "input_tokens": 50233,
-    "cached_tokens": 43700,
-    "cache_write_tokens": 6431,
-    "output_tokens": 2122,
-    "total_tokens": 52355,
-    "cost_usd": 0.002312,
-    "total_latency_ms": 26404.5,
-    "mean_latency_ms": 3300.6,
-    "median_latency_ms": 2257.0,
-    "correct": 7,
+    "input_tokens": 50196,
+    "cached_tokens": 43668,
+    "cache_write_tokens": 6426,
+    "output_tokens": 1437,
+    "total_tokens": 51633,
+    "cost_usd": 0.001969,
+    "total_latency_ms": 9360.0,
+    "mean_latency_ms": 1170.0,
+    "median_latency_ms": 1205.2,
+    "correct": 8,
     "of": 8
   },
   "savings": {
-    "input_tokens_pct": -4.1,
-    "total_tokens_pct": -4.7,
-    "cost_pct": 47.5,
-    "latency_pct": 58.0,
-    "cost_usd_absolute": 0.002088
+    "input_tokens_pct": -6.6,
+    "total_tokens_pct": -6.5,
+    "cost_pct": 51.5,
+    "latency_pct": 87.4,
+    "cost_usd_absolute": 0.002094
   },
   "correctness": {
     "cold_correct": "8/8",
-    "warm_correct": "7/8",
-    "questions_where_warm_lost_a_fact": [
-      "q4-airport"
-    ],
-    "verdict": "the warm pass dropped a required fact; see questions_where_warm_lost_a_fact"
+    "warm_correct": "8/8",
+    "questions_where_warm_lost_a_fact": [],
+    "verdict": "caching did not cost any correctness — the warm pass contained every required fact the cold pass did"
   },
   "provider_cache_reporting": {
-    "cold_cache_read_share_of_input": 0.454,
+    "cold_cache_read_share_of_input": 0.466,
     "warm_cache_read_share_of_input": 0.87,
     "responsive_to_cache_state": true,
     "note": "cache reads rose with a warm prefix, so the reported figures track real cache state and the cost comparison is meaningful"
@@ -63,9 +61,9 @@
       "cache_write": 0.125,
       "output": 0.5
     },
-    "cold_cost_usd": 0.005718,
-    "warm_cost_usd": 0.002312,
-    "saving_pct": 59.6
+    "cold_cost_usd": 0.005409,
+    "warm_cost_usd": 0.001969,
+    "saving_pct": 63.6
   },
   "by_question": [
     {
@@ -75,14 +73,14 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5848,
-          "cached_tokens": 2729,
-          "cache_write_tokens": 3107,
-          "output_tokens": 154,
-          "total_tokens": 6002
+          "input_tokens": 5851,
+          "cached_tokens": 2733,
+          "cache_write_tokens": 3106,
+          "output_tokens": 132,
+          "total_tokens": 5983
         },
-        "cost_usd": 0.000494,
-        "elapsed_ms": 8841.1,
+        "cost_usd": 0.000483,
+        "elapsed_ms": 6493.9,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
@@ -99,15 +97,15 @@
           "total_tokens": 5941
         },
         "cost_usd": 0.000471,
-        "elapsed_ms": 3611.0,
+        "elapsed_ms": 688.1,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
         "answer": "The ceremony starts at 17:00 on Saturday 12 June 2027. Please be seated by 16:40."
       },
-      "tokens_saved": 61,
-      "cost_saved_usd": 2.3e-05,
-      "latency_saved_ms": 5230.1,
+      "tokens_saved": 42,
+      "cost_saved_usd": 1.2e-05,
+      "latency_saved_ms": 5805.8,
       "both_correct": true,
       "answers_agree": true,
       "answer_similarity": 0.818
@@ -117,44 +115,44 @@
       "question": "When is the welcome dinner, and how formal is it?",
       "cold": {
         "tokens": {
-          "requests": 5,
-          "tool_calls": 3,
-          "input_tokens": 7234,
-          "cached_tokens": 2745,
-          "cache_write_tokens": 4474,
-          "output_tokens": 364,
-          "total_tokens": 7598
-        },
-        "cost_usd": 0.00077,
-        "elapsed_ms": 10757.3,
-        "correct": true,
-        "missing_facts": [],
-        "requests": 5,
-        "answer": "The welcome dinner is Friday 11 June at 20:00, in the courtyard at Villa delle Rose in Scala. The dress code is casual."
-      },
-      "warm": {
-        "tokens": {
           "requests": 4,
           "tool_calls": 2,
           "input_tokens": 5866,
-          "cached_tokens": 5432,
-          "cache_write_tokens": 422,
-          "output_tokens": 203,
-          "total_tokens": 6069
+          "cached_tokens": 2743,
+          "cache_write_tokens": 3111,
+          "output_tokens": 163,
+          "total_tokens": 6029
         },
-        "cost_usd": 0.00021,
-        "elapsed_ms": 978.7,
+        "cost_usd": 0.000499,
+        "elapsed_ms": 9097.7,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
         "answer": "The welcome dinner is Friday 11 June at 20:00 in the courtyard at Villa delle Rose, Scala. The dress code is casual."
       },
-      "tokens_saved": 1529,
-      "cost_saved_usd": 0.00056,
-      "latency_saved_ms": 9778.6,
+      "warm": {
+        "tokens": {
+          "requests": 4,
+          "tool_calls": 2,
+          "input_tokens": 5850,
+          "cached_tokens": 5432,
+          "cache_write_tokens": 406,
+          "output_tokens": 136,
+          "total_tokens": 5986
+        },
+        "cost_usd": 0.000174,
+        "elapsed_ms": 1513.9,
+        "correct": true,
+        "missing_facts": [],
+        "requests": 4,
+        "answer": "The welcome dinner is Friday 11 June at 20:00 in the courtyard at Villa delle Rose, Scala. The dress code is casual."
+      },
+      "tokens_saved": 43,
+      "cost_saved_usd": 0.000325,
+      "latency_saved_ms": 7583.8,
       "both_correct": true,
       "answers_agree": true,
-      "answer_similarity": 0.979
+      "answer_similarity": 1.0
     },
     {
       "id": "q3-rsvp-deadline",
@@ -163,18 +161,18 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5682,
-          "cached_tokens": 2731,
-          "cache_write_tokens": 2939,
-          "output_tokens": 117,
-          "total_tokens": 5799
+          "input_tokens": 5923,
+          "cached_tokens": 2743,
+          "cache_write_tokens": 3168,
+          "output_tokens": 135,
+          "total_tokens": 6058
         },
-        "cost_usd": 0.000454,
-        "elapsed_ms": 6397.3,
+        "cost_usd": 0.000492,
+        "elapsed_ms": 15255.7,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Please RSVP by 1 May 2027. After that, message the host through this app to change your RSVP, dietary needs, or party size."
+        "answer": "Please RSVP by 1 May 2027."
       },
       "warm": {
         "tokens": {
@@ -187,18 +185,18 @@
           "total_tokens": 5776
         },
         "cost_usd": 0.000143,
-        "elapsed_ms": 989.1,
+        "elapsed_ms": 1211.0,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
         "answer": "Please RSVP by 1 May 2027. After that, message the host through this app if you need to change your RSVP, dietary needs, or party size."
       },
-      "tokens_saved": 23,
-      "cost_saved_usd": 0.000311,
-      "latency_saved_ms": 5408.2,
+      "tokens_saved": 282,
+      "cost_saved_usd": 0.000349,
+      "latency_saved_ms": 14044.7,
       "both_correct": true,
       "answers_agree": true,
-      "answer_similarity": 0.953
+      "answer_similarity": 0.323
     },
     {
       "id": "q4-airport",
@@ -207,45 +205,42 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5960,
-          "cached_tokens": 2750,
-          "cache_write_tokens": 3198,
-          "output_tokens": 267,
-          "total_tokens": 6227
+          "input_tokens": 5934,
+          "cached_tokens": 2746,
+          "cache_write_tokens": 3176,
+          "output_tokens": 110,
+          "total_tokens": 6044
         },
-        "cost_usd": 0.000562,
-        "elapsed_ms": 7012.9,
+        "cost_usd": 0.000481,
+        "elapsed_ms": 13911.3,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Fly into Naples (NAP); it’s about 1 hour 40 minutes from Ravello by road. Rome Fiumicino (FCO) is another option, but the drive is about 3.5 hours, and wedding shuttles don’t serve it."
+        "answer": "Fly into Naples (NAP). It’s about 1 hour 40 minutes from Ravello by road."
       },
       "warm": {
         "tokens": {
           "requests": 6,
           "tool_calls": 4,
-          "input_tokens": 9457,
-          "cached_tokens": 8426,
-          "cache_write_tokens": 1013,
-          "output_tokens": 795,
-          "total_tokens": 10252
+          "input_tokens": 9399,
+          "cached_tokens": 8394,
+          "cache_write_tokens": 987,
+          "output_tokens": 273,
+          "total_tokens": 9672
         },
-        "cost_usd": 0.00061,
-        "elapsed_ms": 3264.7,
-        "correct": false,
-        "missing_facts": [
-          "naples / nap",
-          "1 hour 40 / 1h40 / 100 minutes / 1 ora e 40"
-        ],
+        "cost_usd": 0.000346,
+        "elapsed_ms": 852.5,
+        "correct": true,
+        "missing_facts": [],
         "requests": 6,
-        "answer": "I’ve passed your question to the couple to confirm which airport to use and how far it is from Ravello. I’ll get back to you when I have their answer."
+        "answer": "Fly into Naples (NAP), about 1 hour 40 minutes from Ravello by road. Wedding shuttles meet the main arrival waves there."
       },
-      "tokens_saved": -4025,
-      "cost_saved_usd": -4.8e-05,
-      "latency_saved_ms": 3748.2,
-      "both_correct": false,
-      "answers_agree": false,
-      "answer_similarity": 0.275
+      "tokens_saved": -3628,
+      "cost_saved_usd": 0.000135,
+      "latency_saved_ms": 13058.8,
+      "both_correct": true,
+      "answers_agree": true,
+      "answer_similarity": 0.694
     },
     {
       "id": "q5-children",
@@ -254,42 +249,42 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5922,
-          "cached_tokens": 2744,
-          "cache_write_tokens": 3166,
-          "output_tokens": 390,
-          "total_tokens": 6312
+          "input_tokens": 5898,
+          "cached_tokens": 2742,
+          "cache_write_tokens": 3144,
+          "output_tokens": 376,
+          "total_tokens": 6274
         },
-        "cost_usd": 0.000619,
-        "elapsed_ms": 8910.1,
+        "cost_usd": 0.00061,
+        "elapsed_ms": 8627.9,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "I’m afraid the Saturday dinner is adults-only, so your children can’t attend. Two vetted sitters are available at Palazzo Avino from 18:30; you can book through the host by 1 May 2027."
+        "answer": "No—the Saturday dinner is adults-only after 19:00. Two vetted sitters are available at Palazzo Avino from 18:30; to book, please contact the host by 1 May 2027."
       },
       "warm": {
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5913,
+          "input_tokens": 5916,
           "cached_tokens": 5436,
-          "cache_write_tokens": 465,
-          "output_tokens": 404,
-          "total_tokens": 6317
+          "cache_write_tokens": 468,
+          "output_tokens": 360,
+          "total_tokens": 6276
         },
-        "cost_usd": 0.000316,
-        "elapsed_ms": 839.0,
+        "cost_usd": 0.000294,
+        "elapsed_ms": 914.8,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "I’m afraid not—the Saturday ceremony and dinner are adults-only after 19:00, and dinner starts at 19:30. Two vetted sitters are available at Palazzo Avino from 18:30; you can book through the host by 1 May 2027."
+        "answer": "I’m afraid the Saturday dinner is adults-only, so your children aren’t invited. Two vetted sitters are available at Palazzo Avino from 18:30; you can book through the host by 1 May 2027."
       },
-      "tokens_saved": -5,
-      "cost_saved_usd": 0.000303,
-      "latency_saved_ms": 8071.1,
+      "tokens_saved": -2,
+      "cost_saved_usd": 0.000316,
+      "latency_saved_ms": 7713.1,
       "both_correct": true,
       "answers_agree": true,
-      "answer_similarity": 0.739
+      "answer_similarity": 0.775
     },
     {
       "id": "q6-brunch",
@@ -298,42 +293,42 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5880,
-          "cached_tokens": 2745,
-          "cache_write_tokens": 3123,
+          "input_tokens": 5890,
+          "cached_tokens": 2739,
+          "cache_write_tokens": 3139,
           "output_tokens": 211,
-          "total_tokens": 6091
+          "total_tokens": 6101
         },
-        "cost_usd": 0.000525,
-        "elapsed_ms": 8400.1,
+        "cost_usd": 0.000526,
+        "elapsed_ms": 8062.0,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Yes—there’s a farewell brunch on Sunday 13 June, from 11:00 to 14:00 on the sea terrace at Hotel Villa Romana in Minori. You can drop in any time; there’s no seating plan."
+        "answer": "Yes—there’s a farewell brunch on Sunday 13 June, from 11:00 to 14:00 on the sea terrace at Hotel Villa Romana in Minori. It’s drop-in, so you can arrive any time; there’s no seating plan."
       },
       "warm": {
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5835,
+          "input_tokens": 5862,
           "cached_tokens": 5423,
-          "cache_write_tokens": 400,
-          "output_tokens": 159,
-          "total_tokens": 5994
+          "cache_write_tokens": 427,
+          "output_tokens": 158,
+          "total_tokens": 6020
         },
-        "cost_usd": 0.000185,
-        "elapsed_ms": 6034.2,
+        "cost_usd": 0.000188,
+        "elapsed_ms": 1629.2,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Yes—a farewell brunch is planned for Sunday, 13 June, from 11:00 to 14:00 on the sea terrace at Hotel Villa Romana in Minori. You can drop in any time; there’s no seating plan."
+        "answer": "Yes—there’s a farewell brunch on Sunday, 13 June, from 11:00 to 14:00 on the sea terrace at Hotel Villa Romana in Minori. You can drop in any time; there’s no seating plan."
       },
-      "tokens_saved": 97,
-      "cost_saved_usd": 0.00034,
-      "latency_saved_ms": 2365.9,
+      "tokens_saved": 81,
+      "cost_saved_usd": 0.000338,
+      "latency_saved_ms": 6432.8,
       "both_correct": true,
       "answers_agree": true,
-      "answer_similarity": 0.934
+      "answer_similarity": 0.919
     },
     {
       "id": "q7-bar",
@@ -342,42 +337,42 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5895,
-          "cached_tokens": 2741,
-          "cache_write_tokens": 3142,
-          "output_tokens": 188,
-          "total_tokens": 6083
+          "input_tokens": 5897,
+          "cached_tokens": 2739,
+          "cache_write_tokens": 3146,
+          "output_tokens": 179,
+          "total_tokens": 6076
         },
-        "cost_usd": 0.000515,
-        "elapsed_ms": 5958.9,
+        "cost_usd": 0.000511,
+        "elapsed_ms": 6756.9,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Yes—the open bar runs from 18:00 to 01:00, with local Campania wine, beer, limoncello, and soft drinks. Spirits are pay-your-own after midnight."
+        "answer": "Yes—there’s an open bar from 18:00 to 01:00, with local Campania wine, beer, limoncello and soft drinks. Spirits are pay-your-own after midnight."
       },
       "warm": {
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5875,
+          "input_tokens": 5882,
           "cached_tokens": 5428,
-          "cache_write_tokens": 435,
-          "output_tokens": 233,
-          "total_tokens": 6108
+          "cache_write_tokens": 442,
+          "output_tokens": 182,
+          "total_tokens": 6064
         },
-        "cost_usd": 0.000226,
-        "elapsed_ms": 9438.5,
+        "cost_usd": 0.000202,
+        "elapsed_ms": 1351.2,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Yes—the open bar runs from 18:00 to 01:00 and includes local Campania wine, beer, limoncello, and soft drinks. Spirits are pay-your-own after midnight."
+        "answer": "Yes—there’s an open bar from 18:00 to 01:00, with local Campania wine, beer, limoncello and soft drinks. Spirits are pay-your-own after midnight."
       },
-      "tokens_saved": -25,
-      "cost_saved_usd": 0.000289,
-      "latency_saved_ms": -3479.6,
+      "tokens_saved": 12,
+      "cost_saved_usd": 0.000309,
+      "latency_saved_ms": 5405.7,
       "both_correct": true,
       "answers_agree": true,
-      "answer_similarity": 0.949
+      "answer_similarity": 1.0
     },
     {
       "id": "q8-dress-colours",
@@ -386,18 +381,18 @@
         "tokens": {
           "requests": 4,
           "tool_calls": 2,
-          "input_tokens": 5814,
-          "cached_tokens": 2735,
-          "cache_write_tokens": 3067,
+          "input_tokens": 5809,
+          "cached_tokens": 2733,
+          "cache_write_tokens": 3064,
           "output_tokens": 98,
-          "total_tokens": 5912
+          "total_tokens": 5907
         },
         "cost_usd": 0.000461,
-        "elapsed_ms": 6562.0,
+        "elapsed_ms": 6352.0,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
-        "answer": "Please avoid white, ivory, cream, olive, and sand. Everything else is welcome."
+        "answer": "Please avoid white, ivory, cream, olive, and sand. Any other colour is welcome."
       },
       "warm": {
         "tokens": {
@@ -410,18 +405,18 @@
           "total_tokens": 5898
         },
         "cost_usd": 0.000151,
-        "elapsed_ms": 1249.3,
+        "elapsed_ms": 1199.3,
         "correct": true,
         "missing_facts": [],
         "requests": 4,
         "answer": "Please avoid white, ivory, cream, olive, and sand. Any other colours are welcome."
       },
-      "tokens_saved": 14,
+      "tokens_saved": 9,
       "cost_saved_usd": 0.00031,
-      "latency_saved_ms": 5312.7,
+      "latency_saved_ms": 5152.7,
       "both_correct": true,
       "answers_agree": true,
-      "answer_similarity": 0.805
+      "answer_similarity": 0.963
     }
   ]
 }

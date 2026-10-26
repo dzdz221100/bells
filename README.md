@@ -364,11 +364,18 @@ at `UsageLimits(request_limit=8)`.
 |---|---|---|
 | **Concierge** (guest-facing) | [`agents/concierge.py`](backend/agents/concierge.py) | `ask_knowledge`, `ask_logistics`, `ask_registry`, `escalate_to_host` |
 | Knowledge | [`agents/knowledge.py`](backend/agents/knowledge.py) | `search_facts` |
-| Logistics | [`agents/logistics.py`](backend/agents/logistics.py) | `get_pickup`, `list_runs`, `get_hotels`, `solve_shuttles` |
+| Logistics | [`agents/logistics.py`](backend/agents/logistics.py) | `get_pickup`, `list_runs`, `get_hotels`, `search_facts`, `solve_shuttles` |
 | Registry | [`agents/registry.py`](backend/agents/registry.py) | `list_items`, `claim_item`, `unclaim_item` |
 
 The concierge replies in the guest's own language (from `guests.language`)
 while the specialists work in English over English-language facts.
+
+Logistics reads `wedding_facts` through the same filtered query the knowledge
+agent uses. It has to: a guest asking about luggage storage or which airport to
+use is routed to logistics, and the answer to that lives in a fact the couple
+wrote — not in the shuttle tables. Without it, a question the couple had
+*already answered in the console* was escalated to them a second time.
+`output/escalation_loop.json` is the before and after of exactly that.
 
 Prompts live in [`backend/agents/prompts/`](backend/agents/prompts). Every
 agent's instructions are [`hard_rules.md`](backend/agents/prompts/hard_rules.md)

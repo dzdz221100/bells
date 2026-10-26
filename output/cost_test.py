@@ -83,7 +83,12 @@ QUESTIONS: list[dict[str, Any]] = [
     {
         "id": "q5-children",
         "text": "Can I bring my two children to the wedding dinner on the Saturday?",
-        "must_include": [["adults-only", "adults only", "19:00", "7 pm"]],
+        # Camille's record language is French, and a perturbed prompt sometimes
+        # tips the reply into it. "19 h" is the same fact as "19:00", so the
+        # check accepts the guest's own language rather than failing a correct
+        # answer for being written in it.
+        "must_include": [["adults-only", "adults only", "19:00", "7 pm",
+                          "19 h", "adultes", "adulti", "adultos"]],
     },
     {
         "id": "q6-brunch",

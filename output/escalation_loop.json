@@ -1,181 +1,159 @@
 {
-  "run_at": "2026-10-25T23:59:39",
+  "run_at": "2026-10-26T00:14:36",
   "model": "gpt-6-luna",
-  "what_this_shows": "a question with no recorded answer is escalated rather than guessed; the couple answer it once in the host console; it becomes a public wedding fact; and the agent answers it unaided from then on",
+  "what_this_shows": "three questions the agent had already escalated during real guest sessions are answered once by the couple in the host console, become public wedding facts, and are then answered by the agent unaided when the same guest asks again",
   "before": {
-    "facts_from_host_console": 0,
-    "facts_total": 35,
-    "inbox": {
-      "open": 9,
-      "answered": 1,
-      "dismissed": 0
-    },
-    "turns_recorded": 143,
-    "escalation_rate": 0.1678
-  },
-  "after": {
     "facts_from_host_console": 3,
     "facts_total": 38,
     "inbox": {
-      "open": 9,
+      "open": 14,
       "answered": 4,
       "dismissed": 0
     },
-    "turns_recorded": 146,
-    "escalation_rate": 0.1849
+    "turns_recorded": 169,
+    "escalation_rate": 0.1893
+  },
+  "after": {
+    "facts_from_host_console": 6,
+    "facts_total": 41,
+    "inbox": {
+      "open": 11,
+      "answered": 7,
+      "dismissed": 0
+    },
+    "turns_recorded": 169,
+    "escalation_rate": 0.1893
   },
   "summary": {
-    "questions_asked": 3,
-    "escalated_on_first_ask": 3,
-    "approved_in_the_host_console": 3,
+    "escalations_approved": 3,
     "facts_from_host_console_moved_by": 3,
-    "answered_unaided_on_second_ask": 2,
+    "answered_unaided_on_second_ask": 3,
+    "of": 3,
     "loop_closed": true,
-    "all_answered_unaided": false,
-    "still_escalating_after_approval": [
-      {
-        "id": "luggage",
-        "fact_exists": 36,
-        "specialists_consulted": [
-          "concierge.ask_logistics",
-          "concierge.escalate_to_host"
-        ],
-        "why": "the concierge routed this to the wrong specialist, so the fact the couple wrote was never searched for"
-      }
-    ]
+    "all_answered_unaided": true,
+    "still_escalating_after_approval": []
   },
-  "first_ask": [
-    {
-      "id": "luggage",
-      "question": "We check out on the Sunday morning but our flight is at night — is there anywhere to leave our bags for the day?",
-      "answer": "I’ve passed this question on to the couple and will get back to you when I have an answer.",
-      "escalated": true,
-      "tools_called": [
-        "concierge.ask_logistics",
-        "concierge.escalate_to_host"
-      ],
-      "cost_usd": 0.000187,
-      "elapsed_ms": 2688.2
-    },
-    {
-      "id": "ev_charging",
-      "question": "We're hiring an electric car — is there anywhere to charge it near the venue?",
-      "answer": "I don’t have confirmed information about EV charging near the venue, so I’ve asked the couple and will get back to you when I have an answer.",
-      "escalated": true,
-      "tools_called": [
-        "concierge.ask_knowledge",
-        "knowledge.search_facts",
-        "knowledge.search_facts",
-        "concierge.escalate_to_host"
-      ],
-      "cost_usd": 0.000298,
-      "elapsed_ms": 2875.6
-    },
-    {
-      "id": "quiet_room",
-      "question": "Our baby will need somewhere quiet to nap during the dinner. Is there a room we could use?",
-      "answer": "I’ve passed this question to the couple and will get back to you when I have an answer.",
-      "escalated": true,
-      "tools_called": [
-        "concierge.ask_knowledge",
-        "knowledge.search_facts",
-        "knowledge.search_facts",
-        "concierge.escalate_to_host"
-      ],
-      "cost_usd": 0.000284,
-      "elapsed_ms": 3160.0
-    }
-  ],
   "host_approvals": [
     {
-      "id": "luggage",
-      "escalation_id": 11,
-      "filed_question": "We check out on Sunday morning but our flight is at night. Is there somewhere to leave our bags for the day?",
+      "escalation_id": 1,
+      "asked_by": "Alessandro Conti",
+      "question_as_filed": "Can we leave our luggage somewhere on the day we check out?",
+      "draft_answer_before_approval": "Palazzo Avino holds luggage at reception until 18:00 on check-out day. (Draft — please confirm whether the other two hotels do the same.)",
       "approved": true,
-      "fact_id": 36,
+      "approved_answer": "Yes. All three hotels hold luggage at reception on check-out day, free of charge, until 20:00. Leave it on your way out and show your room key to collect it.",
+      "fact_id": 39,
       "topic": "luggage_storage",
-      "host_answer": "Yes — all three hotels will hold luggage free of charge on checkout day until 20:00. Leave it with reception on your way out and show your room key to collect it.",
-      "why": "Bells will answer this itself from now on."
+      "is_public": true,
+      "console_said": "Bells will answer this itself from now on."
     },
     {
-      "id": "ev_charging",
-      "escalation_id": 12,
-      "filed_question": "We're hiring an electric car — is there anywhere to charge it near the venue?",
+      "escalation_id": 7,
+      "asked_by": "Camille Fournier",
+      "question_as_filed": "What time do the shuttles run on the wedding day, 12 June?",
+      "draft_answer_before_approval": "(not answered by the agents) The logistics schedule lists shuttles for 10, 11, and 14 June, but no shuttle times for the wedding day on 12 June.",
       "approved": true,
-      "fact_id": 37,
-      "topic": "ev_charging",
-      "host_answer": "There are two public charging points in Ravello, both on the car park at Via della Repubblica. The venue itself has no charger, so plan to charge before you drive up.",
-      "why": "Bells will answer this itself from now on."
+      "approved_answer": "On Saturday 12 June a loop shuttle runs between all three hotels and the venue from 15:30 to 16:45, and back again from 23:30 until 01:30. No booking is needed — just be at your hotel entrance.",
+      "fact_id": 40,
+      "topic": "wedding_day_shuttle_times",
+      "is_public": true,
+      "console_said": "Bells will answer this itself from now on."
     },
     {
-      "id": "quiet_room",
-      "escalation_id": 13,
-      "filed_question": "Can Camille and their family use a quiet room for their baby to nap during dinner?",
+      "escalation_id": 8,
+      "asked_by": "Camille Fournier",
+      "question_as_filed": "Could you confirm which airport Camille should fly into and the travel distance or duration to Ravello? The knowledge information says Naples (NAP), about 1 hour 40 minutes by road, with Rome Fiumicino (FCO) about a 3.5-hour drive, but logistics could not confirm this.",
+      "draft_answer_before_approval": "(not answered by the agents) The knowledge and logistics agents returned conflicting levels of confirmation about the recommended airport and travel time.",
       "approved": true,
-      "fact_id": 38,
-      "topic": "quiet_room",
-      "host_answer": "Yes — the small library off the main hall is set aside as a quiet room all evening. It has a sofa and a dimmer, and the sitters can keep an ear on it.",
-      "why": "Bells will answer this itself from now on."
+      "approved_answer": "Fly into Naples (NAP). It is about 1 hour 40 minutes from Ravello by road, and the wedding shuttles meet the main arrival waves there. Rome Fiumicino (FCO) is often cheaper but it is a 3.5-hour drive and no shuttle meets it.",
+      "fact_id": 41,
+      "topic": "which_airport",
+      "is_public": true,
+      "console_said": "Bells will answer this itself from now on."
     }
   ],
   "second_ask": [
     {
-      "id": "luggage",
-      "question": "We check out on the Sunday morning but our flight is at night — is there anywhere to leave our bags for the day?",
-      "answer": "I don’t have that information yet, but I’ve passed your question to the couple and will get back to you when I hear from them.",
-      "escalated": true,
-      "facts_carried_through": [],
+      "escalation_id": 1,
+      "asked_by": "Alessandro Conti",
+      "asked_now": "We check out on the morning of the 13th but our flight isn't until the evening — can we leave our bags somewhere?",
+      "reply": "Yes—all three hotels can hold your bags at reception for free on checkout day until 20:00. Leave them with reception when you check out, and show your room key to collect them.",
+      "escalated": false,
+      "answered_from_the_couples_answer": true,
       "facts_expected": [
         "20:00",
         "reception"
       ],
-      "answered_from_the_couples_answer": false,
+      "facts_carried_through": [
+        "20:00",
+        "reception"
+      ],
+      "agents_called": [
+        "concierge",
+        "logistics"
+      ],
       "tools_called": [
         "concierge.ask_logistics",
-        "concierge.escalate_to_host"
+        "logistics.search_facts"
       ],
-      "cost_usd": 0.000191,
-      "elapsed_ms": 1515.9
+      "tokens": 6729,
+      "cost_usd": 0.00055,
+      "elapsed_ms": 8854.8
     },
     {
-      "id": "ev_charging",
-      "question": "We're hiring an electric car — is there anywhere to charge it near the venue?",
-      "answer": "There’s no charger at the venue, but there are two public charging points in Ravello, both in the car park at Via della Repubblica. Plan to charge before driving up.",
+      "escalation_id": 7,
+      "asked_by": "Camille Fournier",
+      "asked_now": "What time do the shuttles run on the wedding day itself?",
+      "reply": "The shuttle runs from the three hotels to the venue between 15:30 and 16:45, then returns from 23:30 until 01:30. No booking is needed—just wait at your hotel entrance.",
       "escalated": false,
-      "facts_carried_through": [
-        "via della repubblica",
-        "car park"
-      ],
-      "facts_expected": [
-        "via della repubblica",
-        "car park"
-      ],
       "answered_from_the_couples_answer": true,
-      "tools_called": [
-        "concierge.ask_knowledge",
-        "knowledge.search_facts"
+      "facts_expected": [
+        "15:30",
+        "16:45",
+        "23:30"
       ],
-      "cost_usd": 0.000179,
-      "elapsed_ms": 1568.9
+      "facts_carried_through": [
+        "15:30",
+        "16:45",
+        "23:30"
+      ],
+      "agents_called": [
+        "concierge",
+        "logistics"
+      ],
+      "tools_called": [
+        "concierge.ask_logistics",
+        "logistics.search_facts"
+      ],
+      "tokens": 6732,
+      "cost_usd": 0.000223,
+      "elapsed_ms": 6267.6
     },
     {
-      "id": "quiet_room",
-      "question": "Our baby will need somewhere quiet to nap during the dinner. Is there a room we could use?",
-      "answer": "Yes—the small library off the main hall is set aside as a quiet room for the evening. It has a sofa and dimmer, and the sitters can keep an ear on it.",
+      "escalation_id": 8,
+      "asked_by": "Camille Fournier",
+      "asked_now": "Which airport should I fly into, and how long is the drive to Ravello from there?",
+      "reply": "Fly into Naples (NAP). The drive to Ravello is about 1 hour 40 minutes.",
       "escalated": false,
-      "facts_carried_through": [
-        "library"
-      ],
-      "facts_expected": [
-        "library"
-      ],
       "answered_from_the_couples_answer": true,
-      "tools_called": [
-        "concierge.ask_knowledge",
-        "knowledge.search_facts"
+      "facts_expected": [
+        "naples",
+        "1 hour 40"
       ],
-      "cost_usd": 0.000178,
-      "elapsed_ms": 3864.0
+      "facts_carried_through": [
+        "naples",
+        "1 hour 40"
+      ],
+      "agents_called": [
+        "concierge",
+        "logistics"
+      ],
+      "tools_called": [
+        "concierge.ask_logistics",
+        "logistics.search_facts"
+      ],
+      "tokens": 6695,
+      "cost_usd": 0.000187,
+      "elapsed_ms": 7635.7
     }
   ]
 }

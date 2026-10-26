@@ -14,6 +14,7 @@ from db import connect
 from solver import explain_run, guest_pickup, solve_shuttles
 
 from .common import USAGE_LIMITS, BellsDeps, load_prompt, model
+from .knowledge import search_facts_rows
 
 AGENT_NAME = "logistics"
 
@@ -132,6 +133,33 @@ def logistics_agent() -> Agent[BellsDeps, str]:
                     f"{h['distance_km']} km from the venue · {h['url'] or ''}".strip()
                 )
             return "\n".join(lines)
+
+    @agent.tool
+    async def search_facts(ctx: RunContext[BellsDeps], query: str) -> str:
+        """Anything about travel the couple wrote down themselves.
+
+        The schedule tables do not hold everything: luggage storage, which
+        airport to use, ferry times, parking. When a host answers a question in
+        the console it lands here, so check this before saying you do not know.
+
+        Args:
+            query: the guest's question, or key words from it.
+        """
+        deps = ctx.deps
+        with deps.events.track(AGENT_NAME, "search_facts", query=query) as ev:
+            # Same function the knowledge agent uses: private rows are filtered
+            # out in SQL, so this widens what logistics can read, not who can
+            # read it.
+            facts = search_facts_rows(query, deps.wedding_id, deps.db_path)
+            ev["detail"] = (
+                f"{len(facts)} fact(s): " + ", ".join(f["topic"] for f in facts)
+                if facts else "no match"
+            )
+            if not facts:
+                return "NO_FACTS_FOUND — nothing recorded matches that query."
+            return "\n\n".join(
+                f"[fact {f['id']} · {f['topic']}]\n{f['answer']}" for f in facts
+            )
 
     @agent.tool(name="solve_shuttles")
     async def solve_shuttles_tool(ctx: RunContext[BellsDeps]) -> str:
