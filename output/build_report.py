@@ -771,7 +771,7 @@ def build() -> None:
 
     # ---- traced run ----
     tools = turn.get("tools_called") or []
-    w('<h3>One real run, traced</h3>')
+    w('<h3>One recorded end-to-end run, traced</h3>')
     w(f'<p>One guest question that needed two specialists — '
       f'{len(tools)} tool calls across {len(turn.get("agents_called") or [])} '
       f'agents. This is the turn in the screenshot below, the same one, down to '

@@ -44,7 +44,10 @@ CSS = """
 .reveal-viewport,body{background:var(--chalk)}
 .reveal{font-family:var(--sans);color:var(--ink);font-size:30px}
 .reveal .slides{text-align:left}
-.reveal section{padding:0 2%}
+/* border-box, or the 2% padding adds outside the 1280px canvas and the
+   right-hand edge of a full-width row is clipped. */
+.reveal section{padding:0 2%;box-sizing:border-box}
+.reveal section *{box-sizing:border-box}
 .bleed{padding:0!important}
 /* the four-beat loop on the demo slide: big, but it has to fit */
 .steps{display:flex;align-items:baseline;gap:.25em;margin-bottom:.45em}
@@ -216,7 +219,8 @@ def build() -> None:
 <section>
   <span class="eyebrow">MGT 409 · AI Foundations for Managers</span>
   <h1>Bells</h1>
-  <p class="kicker">A concierge for destination wedding guests.</p>
+  <p class="kicker">The destination-wedding concierge that answers guests,
+  solves arrivals, and learns every answer once.</p>
   <p style="margin-top:.9em;font-size:.72em">Dariga Zhuman</p>
   {repo_line}
   <span class="clone">git clone {REPO_URL}.git</span>
@@ -269,7 +273,7 @@ def build() -> None:
     S.append(f"""
 <section class="shot-slide">
   <span class="eyebrow">Demo · the guest</span>
-  <h3>Everything you owe, above the fold.</h3>
+  <h3>One guest. One personalised arrival plan.</h3>
   {fig("01", filled, "The guest page — computed from this guest's own row.")}
 </section>""")
 
@@ -312,18 +316,18 @@ def build() -> None:
   <span class="eyebrow">What's next</span>
   <h2>Three things, in order.</h2>
   <div class="row" style="margin-top:.7em">
-    <div class="card"><span class="big sm azure">1</span>
-      <span class="cap">Seating solver</span>
-      <p style="font-size:.56em;margin-top:.4em">Written, not wired in. Same
-      pattern as the shuttles: Python solves, the agent explains.</p></div>
-    <div class="card lemon"><span class="big sm lemon">2</span>
-      <span class="cap">Real sending</span>
-      <p style="font-size:.56em;margin-top:.4em">Drafts exist in five languages.
-      Nothing sends — on purpose. A provider behind the same approval step.</p></div>
-    <div class="card terra"><span class="big sm terra">3</span>
-      <span class="cap">A pilot wedding</span>
+    <div class="card terra"><span class="big sm terra">1</span>
+      <span class="cap">Pilot one real wedding</span>
       <p style="font-size:.56em;margin-top:.4em">Every number here is from one
       seeded wedding and my own testing. No real guest has used it yet.</p></div>
+    <div class="card lemon"><span class="big sm lemon">2</span>
+      <span class="cap">Wire real messaging</span>
+      <p style="font-size:.56em;margin-top:.4em">Drafts exist in five languages.
+      Nothing sends — on purpose. A provider behind the same approval step.</p></div>
+    <div class="card"><span class="big sm azure">3</span>
+      <span class="cap">Add the seating solver</span>
+      <p style="font-size:.56em;margin-top:.4em">Written, not wired in. Same
+      pattern as the shuttles: Python solves, the agent explains.</p></div>
   </div>
   <p class="endnote">All of it, including the evidence these numbers come from:
   <b>{REPO_URL}</b></p>
