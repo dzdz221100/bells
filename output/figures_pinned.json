@@ -16,11 +16,12 @@
   "cache_hit_pct": 73.5,
   "cost_usd": 0.073387,
   "cost_per_turn": 0.000325,
+  "model_requests": 775,
   "facts_total": 41,
   "facts_from_console": 6,
   "minutes_saved": 579,
   "hours_saved": "9.7",
   "escalation_pct": 14.6,
-  "pinned_at": "2026-10-26T09:42:42",
+  "pinned_at": "2026-10-26T10:19:26",
   "why": "frozen so the figures quoted in report.html and slides.html match the host console in the screenshots taken alongside them; re-pin with: python output/build_report.py --pin"
 }

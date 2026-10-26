@@ -299,7 +299,7 @@ def build() -> None:
 <section class="shot-slide">
   <span class="eyebrow">Cost · ${s["cost_per_turn"]:.5f} a question</span>
   <h3>{s["cache_hit_pct"]}% of input served from cache.</h3>
-  {fig("10", filled, f'{s["turns"]} turns · ${s["cost_usd"]:.4f} in total · caching cut cost {cost["savings"]["cost_pct"]}% with {cost["cold"]["correct"]}/{cost["cold"]["of"]} facts intact')}
+  {fig("10", filled, f'{s["turns"]} guest questions · ${s["cost_usd"]:.4f} in total · caching cut cost {cost["savings"]["cost_pct"]}% with {cost["cold"]["correct"]}/{cost["cold"]["of"]} facts intact')}
 </section>""")
 
     # 9 ----------------------------------------------------------------

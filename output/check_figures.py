@@ -70,7 +70,8 @@ def main() -> int:
     p = json.loads(PIN.read_text(encoding="utf-8"))
 
     required = [
-        ("turns", str(p["turns"])),
+        ("guest questions", str(p["turns"])),
+        ("model requests", str(p["model_requests"])),
         ("answered automatically", str(p["answered"])),
         ("escalated", str(p["escalated"])),
         ("escalation rate", f'{p["escalation_pct"]}%'),
@@ -83,7 +84,7 @@ def main() -> int:
         ("cost per question", f'${p["cost_per_turn"]:.5f}'),
     ]
     # what the deck has to carry in its own text; the rest it shows in pictures
-    slide_headlines = ["turns", "answered automatically", "cache hit rate",
+    slide_headlines = ["guest questions", "answered automatically", "cache hit rate",
                        "total cost", "cost per question", "minutes saved",
                        "facts Bells knows"]
 

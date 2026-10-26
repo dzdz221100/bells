@@ -90,7 +90,7 @@ SLOTS: list[dict[str, str]] = [
      "caption": "One draft per guest, each in that guest's language. Nothing sends.",
      "want": "the messages panel with drafts awaiting approval"},
     {"n": "10", "file": "10-spend-panel.png",
-     "caption": "The app costing itself: 226 turns, 73.5% cached, $0.0734.",
+     "caption": "The app costing itself: 226 guest questions, 73.5% cached, $0.0734.",
      "want": "the Spend panel in the host console"},
 ]
 
@@ -200,6 +200,10 @@ def spend_from_trail(trail: list[dict]) -> dict[str, Any]:
         "cache_hit_pct": round(t["cached"] / t["input"] * 100, 1) if t["input"] else 0,
         "cost_usd": round(cost, 6),
         "cost_per_turn": round(cost / len(turns), 6) if turns else 0,
+        # One record is one guest question. `requests` is the model calls made
+        # inside it, which is almost always more than one — the two must never
+        # be conflated in the write-up.
+        "model_requests": sum(r.get("tokens", {}).get("requests", 0) for r in turns),
     }
 
 
@@ -613,7 +617,7 @@ def build() -> None:
 
     w('<div class="stats">')
     for v, k, cls in [
-        (f'{s["turns"]}', 'model turns logged', ''),
+        (f'{s["turns"]}', 'guest questions answered', ''),
         (f'{s["answered"]}/{s["turns"]}', 'answered without the couple', ''),
         (money(s["cost_usd"], 4), 'total spend to date', 'lemon'),
         (f'{imp["runs_saved_pct"]}%', 'fewer airport transfers', 'terra'),
@@ -764,7 +768,7 @@ def build() -> None:
       'deterministic Python, not by the model. None of that needs a frontier '
       'model, and paying for one would buy reasoning this system is designed not '
       'to use. The measured cost is '
-      f'{money(s["cost_per_turn"])} per question (Section 05); the quality check '
+      f'{money(s["cost_per_turn"])} per question (Section 04); the quality check '
       'in <code>cost_results.json</code> is 8 of 8 required facts returned.</p>')
     w('<span class="src-line">Source: output/cost_results.json · '
       'backend/agents/prompts/hard_rules.md</span>')
@@ -825,9 +829,22 @@ def build() -> None:
     w('<span class="secnum">Section 04</span>')
     w('<h2>Tokenomics</h2>')
     t = s["tokens"]
+    w(f'<div class="note src"><p><strong>What “{s["turns"]}” counts.</strong> '
+      f'The audit trail holds <strong>one record per guest question</strong> — '
+      f'one thing a guest typed, and the one reply they got back. That is the '
+      f'unit used everywhere in this report, and it is what the host console '
+      f'labels a “turn”.</p>'
+      f'<p>It is <em>not</em> a count of model calls. Those {s["turns"]} '
+      f'questions made <strong>{s["model_requests"]} model requests</strong> '
+      f'between them — a mean of {s["model_requests"] / s["turns"]:.1f} per '
+      f'question — because the concierge delegates and each specialist it wakes '
+      f'is its own request. The traced run in Section 03 is one question and six '
+      f'model requests. Cost per question therefore already includes every call '
+      f'the question set off.</p></div>')
     w('<div class="stats">')
     for v, k, cls in [
-        (f'{s["turns"]}', 'turns', ''),
+        (f'{s["turns"]}', 'guest questions', ''),
+        (f'{s["model_requests"]}', 'model requests', ''),
         (f'{t["total"]:,}', 'tokens', ''),
         (f'{s["cache_hit_pct"]}%', 'cache hit rate', 'lemon'),
         (money(s["cost_usd"], 4), 'total', ''),
@@ -864,8 +881,8 @@ def build() -> None:
       f'a deliberate runaway-delegation test, three full runs of the escalation '
       f'loop and two complete cold/warm cost passes. Almost all of that traffic '
       f'hit <em>two</em> guest accounts. So {s["guests_seen"]} “guests” absorbed '
-      f'{s["turns"]} turns — roughly {s["turns"] / s["guests_seen"]:.0f} questions '
-      f'each, which is not what a wedding guest does. Dividing by guests inflates '
+      f'{s["turns"]} questions — roughly {s["turns"] / s["guests_seen"]:.0f} each, '
+      f'which is not what a wedding guest does. Dividing by guests inflates '
       f'the per-guest figure by whatever factor I happened to test.</p>')
     w('<p>The number that survives this is <strong>cost per question</strong>. It '
       'does not care who asked or how often.</p>')
@@ -876,7 +893,7 @@ def build() -> None:
     w('<table><thead><tr><th>Input</th><th class="num">Value</th>'
       '<th>Where it comes from</th></tr></thead><tbody>')
     w(f'<tr><td>Cost per question</td><td class="num">{money(s["cost_per_turn"])}</td>'
-      f'<td>measured — {money(s["cost_usd"])} ÷ {s["turns"]} turns, '
+      f'<td>measured — {money(s["cost_usd"])} ÷ {s["turns"]} guest questions, '
       f'<code>audit_trail.json</code></td></tr>')
     w(f'<tr><td>Guests</td><td class="num">{GUESTS_PER_WEDDING}</td>'
       f'<td>this wedding, <code>data/seed.py</code></td></tr>')
@@ -1333,7 +1350,7 @@ if __name__ == "__main__":
         pinned = write_pin()
         print(f"pinned {PIN.relative_to(ROOT)}:")
         for k in ("turns", "answered", "escalated", "escalation_pct",
-                  "minutes_saved", "hours_saved", "facts_total",
+                  "model_requests", "minutes_saved", "hours_saved", "facts_total",
                   "facts_from_console", "cache_hit_pct", "cost_usd",
                   "cost_per_turn"):
             print(f"  {k:20} {pinned[k]}")
