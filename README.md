@@ -152,7 +152,33 @@ describing it.
 | `escalation_loop.json` | the host approval loop run end to end: three unanswerable questions escalate, the couple answer them in the console, and the agent answers them unaided afterwards. |
 | `solver_results.json` | the shuttle solver checked against brute-force optimal. |
 | `audit_trail.json` | every model turn and every confirmed host write, with tokens and cost. |
-| `screenshots/` | screenshots of the running app, added by hand. |
+| `screenshots/` | screenshots of the running app, added by hand (see below). |
+| `report.html` | the written report — one self-contained file, every figure read from the files above at build time. |
+
+### Rebuilding the report
+
+```bash
+backend/.venv/bin/python output/build_report.py
+```
+
+It reads the JSON artifacts, recomputes the spend totals with the same
+arithmetic `/api/host/spend` uses, embeds every screenshot as a base64 data URI
+and writes `output/report.html`. The result opens by double-click on any
+machine, offline, with every image showing — nothing loads from the network
+except the web fonts, and it reads correctly if those fail.
+
+Screenshots are matched to their place in the report by numeric prefix. Drop
+these into `output/screenshots/` and rebuild; a slot with no file prints a
+labelled frame saying what is missing rather than a broken image.
+
+```
+01-guest-page.png         07-host-console.png
+02-three-things.png       08-host-proposal.png
+03-shuttle-timeline.png   09-nudge-drafts.png
+04-chat-trace.png         10-spend-panel.png
+05-privacy-refusal.png
+06-injection-ignored.png
+```
 
 ---
 
