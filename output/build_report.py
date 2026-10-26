@@ -314,6 +314,8 @@ small{font-size:.86em;color:var(--muted)}
   padding:.6rem .8rem;margin:.9rem 0}
 .repo b{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;
   text-transform:uppercase;color:var(--azure);font-weight:400;margin-bottom:.2rem}
+.repo .clone{display:block;margin-top:.35rem;padding-top:.35rem;
+  border-top:1px solid var(--rule);color:var(--muted);font-size:.86em}
 .meta{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:1rem}
 .meta span{display:inline-block;margin-right:1.4rem}
 
@@ -553,12 +555,15 @@ def build() -> None:
       'own language, solves their arrival, and never answers the couple’s '
       'question twice.</p>')
     if REPO_IS_PUBLIC:
-        w(f'<div class="repo"><b>Source code — public repository</b>{h(REPO_URL)}</div>')
-        w(f'<p><small>Clickable: <a href="{h(REPO_URL)}">{h(REPO_URL)}</a>. The '
-          'plain text above is the authoritative copy — this file is submitted on '
-          'its own, so the URL has to survive being read rather than clicked.</small></p>')
+        w(f'<div class="repo"><b>Source code — public repository</b>{h(REPO_URL)}'
+          f'<span class="clone">git clone {h(REPO_URL)}.git</span></div>')
+        w(f'<p><small>This file is submitted on its own — Canvas takes files or a '
+          f'link, not both — so the URL above is written out in full to survive '
+          f'being read rather than clicked. It is also live: '
+          f'<a href="{h(REPO_URL)}">{h(REPO_URL)}</a>.</small></p>')
     else:
-        w(f'<div class="repo"><b>Source code — private repository</b>{h(REPO_URL)}</div>')
+        w(f'<div class="repo"><b>Source code — private repository</b>{h(REPO_URL)}'
+          f'<span class="clone">git clone {h(REPO_URL)}.git</span></div>')
         w('<p><strong>This repository is private.</strong> '
           '<code>zlisto</code> has been added as a collaborator and can open it '
           'directly. If access does not work, please email me and I will grant it.</p>')
@@ -1201,11 +1206,8 @@ def build() -> None:
       f'<code>cost_results.json</code>, <code>safety_results.json</code>, '
       f'<code>solver_results.json</code>, <code>escalation_loop.json</code>. '
       f'Model: {h(cost["model"])}.<br>')
-    if missing:
-        w(f'{len(missing)} screenshot slot(s) still empty: '
-          f'{", ".join(missing)} — drop files into '
-          f'<code>output/screenshots/</code> and rebuild.<br>')
-    w(f'Repository: {h(REPO_URL)}')
+    w(f'Source code: {h(REPO_URL)} · '
+      f'<code>git clone {h(REPO_URL)}.git</code>')
     w('</p>')
     w('</section>')
 

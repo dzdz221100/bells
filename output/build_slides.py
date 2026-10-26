@@ -92,6 +92,11 @@ CSS = """
   padding:.55em .65em}
 .card.lemon{border-top-color:var(--lemon)} .card.terra{border-top-color:var(--terra)}
 
+.clone{font-family:var(--mono);font-size:.5em;color:var(--muted);
+  display:block;margin-top:.45em}
+.endnote{font-family:var(--mono);font-size:.52em;color:var(--muted);
+  margin-top:1.1em;padding-top:.5em;border-top:1px solid var(--rule)}
+.endnote b{color:var(--ink);font-weight:400}
 .repo{font-family:var(--mono);font-size:.95em;letter-spacing:.01em;color:var(--ink);
   background:#fff;border:2px solid var(--azure);padding:.45em .6em;
   display:inline-block;margin-top:.5em;word-break:break-all}
@@ -201,6 +206,7 @@ def build() -> None:
   <p class="kicker">A concierge for destination wedding guests.</p>
   <p style="margin-top:.9em;font-size:.72em">Dariga Zhuman</p>
   {repo_line}
+  <span class="clone">git clone {REPO_URL}.git</span>
 </section>""")
 
     # 2 ----------------------------------------------------------------
@@ -349,7 +355,7 @@ def build() -> None:
 </section>""")
 
     # 10 ---------------------------------------------------------------
-    S.append("""
+    S.append(f"""
 <section>
   <span class="eyebrow">What's next</span>
   <h2>Three things, in order.</h2>
@@ -367,6 +373,8 @@ def build() -> None:
       <p style="font-size:.56em;margin-top:.4em">Every number here is from one
       seeded wedding and my own testing. No real guest has used it yet.</p></div>
   </div>
+  <p class="endnote">All of it, including the evidence these numbers come from:
+  <b>{REPO_URL}</b></p>
 </section>""")
 
     missing = [x["n"] for x in SLOTS if x["n"] not in filled]
